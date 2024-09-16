@@ -1,0 +1,34 @@
+package com.example.my_project.controller;
+
+import com.example.my_project.models.Lecture;
+import com.example.my_project.service.LectureService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/courses")
+public class LectureController {
+  private final LectureService lectureService;
+  @Autowired
+  public CourseController(LectureService lectureService) {
+    this.lectureService = lectureService;
+  }
+  @GetMapping("/{courseId}/lectures")
+  public List<Lecture> getLecturesByCourseId(@PathVariable Long courseId) {
+    return lectureService.getLecturesByCourseId(courseId);
+  }
+  @PostMapping("/{courseId}/lectures")
+  public String addLectureToCourse(@PathVariable Long courseId, @RequestBody Lecture lecture) {
+    Optional<Course> course = courseService.findCourseById(courseId);
+    if (course.isPresent()) {
+      lectureService.addLectureToCourse(course.get(), lecture);
+      return "Lecture added successfully!";
+    } 
+    else {
+      return "Course not found.";
+    }
+  }
+}
+
