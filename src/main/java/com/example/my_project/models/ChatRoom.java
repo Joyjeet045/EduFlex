@@ -1,5 +1,7 @@
 package com.example.my_project.models;
 
+import com.example.my_project.models.*;
+
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;

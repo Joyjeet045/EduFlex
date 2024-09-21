@@ -1,5 +1,6 @@
 package com.example.my_project.models;
 
+import com.example.my_project.models.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.util.Set;

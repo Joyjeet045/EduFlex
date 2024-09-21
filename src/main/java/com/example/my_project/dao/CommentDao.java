@@ -10,21 +10,26 @@ import java.util.*;
 
 @Repository
 public class CommentDao {
+    private final JdbcTemplate jdbcTemplate;
+
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    public CommentDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     public int saveComment(Comment comment) {
-      final String sql = "INSERT INTO COMMENTS(lecture_id, user_id, comment_content, upvotes, downvotes, reply_of) VALUES (?, ?, ?, ?, ?, ?)";
-      return jdbcTemplate.update(sql,
-          comment.getLecture().getId(),
-          comment.getUser().getId(),
-          comment.getCommentContent(),
-          comment.getUpvotes(),
-          comment.getDownvotes(),
-          comment.getReplyOf() != null ? comment.getReplyOf().getCommentId() : null
-      );
+        final String sql = "INSERT INTO COMMENTS(lecture_id, user_id, comment_content, upvotes, downvotes, reply_of) VALUES (?, ?, ?, ?, ?, ?)";
+        return jdbcTemplate.update(sql,
+            comment.getLecture().getId(),
+            comment.getUser().getId(),
+            comment.getCommentContent(),
+            comment.getUpvotes(),
+            comment.getDownvotes(),
+            comment.getReplyOf() != null ? comment.getReplyOf().getCommentId() : null
+        );
     }
     public List<Comment> findByLectureId(Long lectureId) {
-      final String sql = "SELECT * FROM COMMENTS WHERE lecture_id = ?";
-      return jdbcTemplate.query(sql, new Object[]{lectureId}, new BeanPropertyRowMapper<>(Comment.class));
+        final String sql = "SELECT * FROM COMMENTS WHERE lecture_id = ?";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Comment.class), lectureId);
     }
 }

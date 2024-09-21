@@ -3,6 +3,7 @@ package com.example.my_project.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.Duration;
+import com.example.my_project.models.*;
 
 
 import lombok.Data;

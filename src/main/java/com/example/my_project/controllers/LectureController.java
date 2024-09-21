@@ -23,9 +23,9 @@ public class LectureController {
   }
   @PostMapping("/{courseId}/lectures")
   public String addLectureToCourse(@PathVariable Long courseId, @RequestBody Lecture lecture) {
-    Optional<Course> course = courseService.findCourseById(courseId);
-    if (course.isPresent()) {
-      lectureService.addLectureToCourse(course.get(), lecture);
+    Course course = courseService.findCourseById(courseId);
+    if (course!=null) {
+      lectureService.addLectureToCourse(course,lecture);
       return "Lecture added successfully!";
     } 
     else {

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 import lombok.Data;
+import com.example.my_project.models.*;
 
 @Entity
 @Data

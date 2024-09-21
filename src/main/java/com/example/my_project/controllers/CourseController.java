@@ -25,13 +25,13 @@ public class CourseController {
 
     @PostMapping("/{courseId}/enroll/{userId}")
     public ResponseEntity<String> enrollUserToCourse(@PathVariable Long courseId, @PathVariable Long userId) {
-        Optional<Course> course = courseService.findCourseById(courseId);
+        Course course = courseService.findCourseById(courseId);
         Optional<User> user = userService.getUserById(userId);
-        if (course.isPresent() && user.isPresent()) {
-          courseService.enrollLearner(course.get(), user.get());
-          return ResponseEntity.ok("Enrollment successful!");
+        if (course!=null && user.isPresent()) {
+            courseService.enrollLearner(course, user.get());
+            return ResponseEntity.ok("Enrollment successful!");
         } else {
-          return ResponseEntity.badRequest().body("Enrollment failed: Course or User not found.");
+            return ResponseEntity.badRequest().body("Enrollment failed: Course or User not found.");
         }
     }
 

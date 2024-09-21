@@ -25,9 +25,8 @@ public class CourseService {
     this.userService = userService;
   }
   public Course findCourseById(Long id) {
-    return courseDao.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + id));
-}
+    return courseDao.findById(id).orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + id));
+  }
 
   public List<Course> findAll() {
     return courseDao.findAll();
@@ -56,7 +55,7 @@ public class CourseService {
       return courseDao.addCourse(course) > 0; 
     }
     else{
-      throw new IllegalStateException("Current user not found.");
+      return false;
     }
   }
 

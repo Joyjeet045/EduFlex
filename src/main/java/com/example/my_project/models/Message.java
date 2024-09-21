@@ -2,6 +2,7 @@ package com.example.my_project.models;
 
 import jakarta.persistence.*;
 import java.time.*;
+import com.example.my_project.models.*;
 
 import lombok.Data;
 import lombok.Getter;
