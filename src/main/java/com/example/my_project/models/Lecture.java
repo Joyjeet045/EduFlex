@@ -1,7 +1,7 @@
 package com.example.my_project.models;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.time.Duration;
 
 

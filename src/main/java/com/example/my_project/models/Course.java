@@ -1,7 +1,7 @@
 package com.example.my_project.models;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
 import lombok.Data;
@@ -37,28 +37,4 @@ public class Course{
   private Category category;
   private Double price=100.0;
   private String thumbnail;
-}
-public enum Language {
-  ENGLISH,
-  HINDI,
-  MARATHI,
-  BENGALI
-}
-
-public enum Category {
-  WEB_DEVELOPMENT,
-  DATA_SCIENCE,
-  ARTIFICIAL_INTELLIGENCE,
-  MACHINE_LEARNING,
-  MOBILE_DEVELOPMENT,
-  GAME_DEVELOPMENT,
-  DIGITAL_MARKETING,
-  GRAPHIC_DESIGN,
-  PERSONAL_DEVELOPMENT,
-  BUSINESS,
-  FINANCE,
-  HEALTH_AND_FITNESS,
-  PHOTOGRAPHY,
-  MUSIC,
-  LANGUAGE_LEARNING
 }

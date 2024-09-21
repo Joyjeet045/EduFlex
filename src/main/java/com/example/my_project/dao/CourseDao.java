@@ -29,14 +29,14 @@ public class CourseDao{
     );
   }
   public List<Course> findAll() {
-    String sql="SELECT * FROM COURSES"
+    String sql="SELECT * FROM COURSES";
     return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Course.class));
   }
-  public Optional<Course>findById(Long id){
+  public Optional<Course>  findById(Long id){
     String sql = "SELECT * FROM COURSES WHERE id = ?";
     try {
       Course course= jdbcTemplate.queryForObject(sql,new Object[]{id},new BeanPropertyRowMapper<>(Course.class));
-      return Optional.of(course)
+      return Optional.of(course);
     }
     catch(Exception e) {
       System.out.println(e);

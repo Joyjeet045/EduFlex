@@ -14,21 +14,32 @@ import java.util.Optional;
 @Service
 public class UserService {
   private final UserDao userDao;
-  private Optionalfinal PasswordEncoder passwordEncoder;
+  private final PasswordEncoder passwordEncoder;
   @Autowired
   public UserService(UserDao userDao, PasswordEncoder passwordEncoder) {
     this.userDao = userDao;
     this.passwordEncoder = passwordEncoder;
   }
   public boolean registerUser(User user) {
-    <User> existingUser = userDao.findByUsername(user.getUsername());
-    if(existingUser.isPresent()){
+    Optional<User> existingUser = userDao.findByUsername(user.getUsername());
+    if (existingUser.isPresent()) {
       return false; 
     }
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     userDao.saveUser(user);
     return true;
   }
+  public Optional<User> loginUser(String username, String password) {
+    Optional<User> userOptional = userDao.findByUsername(username);
+    if (userOptional.isPresent()) {
+        User user = userOptional.get();
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            return Optional.of(user); 
+        }
+    }
+    return Optional.empty(); 
+}
+
   public Optional<User> getUserById(Long id) {
     return userDao.findById(id);
   }

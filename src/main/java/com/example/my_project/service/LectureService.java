@@ -6,6 +6,8 @@ import com.example.my_project.models.Lecture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.*;
+
 @Service
 public class LectureService {
   private final LectureDao lectureDao;

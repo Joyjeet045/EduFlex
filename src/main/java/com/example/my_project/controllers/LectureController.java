@@ -1,19 +1,21 @@
 package com.example.my_project.controller;
 
-import com.example.my_project.models.Lecture;
-import com.example.my_project.service.LectureService;
+import com.example.my_project.models.*;
+import com.example.my_project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/courses")
 public class LectureController {
   private final LectureService lectureService;
+  private final CourseService courseService;
   @Autowired
-  public CourseController(LectureService lectureService) {
+  public LectureController(LectureService lectureService,CourseService courseService) {
     this.lectureService = lectureService;
+    this.courseService = courseService;
   }
   @GetMapping("/{courseId}/lectures")
   public List<Lecture> getLecturesByCourseId(@PathVariable Long courseId) {

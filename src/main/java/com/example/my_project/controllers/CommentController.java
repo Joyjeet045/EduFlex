@@ -8,9 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.*;
-import java.util.List;
-
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import jakarta.validation.*;
+import java.util.*;
 @RestController
 @RequestMapping("/api/comments")
 

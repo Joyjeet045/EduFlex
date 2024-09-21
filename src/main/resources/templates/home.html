@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/home.css">
+    <title>All Courses</title>
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+    <header>
+        <h1>All Courses</h1>
+        <div class="filter-container">
+            <input type="text" id="title" placeholder="Filter by Title..." />
+            <input type="text" id="category" placeholder="Filter by Category..." />
+            <input type="text" id="instructor" placeholder="Filter by Instructor..." />
+        </div>
+    </header>
+    
+    <main>
+        <div id="course-list" class="course-list"></div>
+    </main>
+    
+    <script>
+        fetch('../templates/navbar.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('navbar-placeholder').innerHTML = data;
+        })
+        .catch(error => console.error('Error loading navbar:', error));
+    </script>
+    
+    <script src="../static/js/home.js" type="module"></script>
+</body>
+</html>

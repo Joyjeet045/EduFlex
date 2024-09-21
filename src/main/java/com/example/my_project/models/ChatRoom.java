@@ -1,15 +1,13 @@
 package com.example.my_project.models;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.Data;
-import lombok.Getter;
 
 @Entity
 @Data
-@Getter
 
 public class ChatRoom {
   @Id

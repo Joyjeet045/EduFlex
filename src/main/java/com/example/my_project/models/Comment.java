@@ -1,7 +1,7 @@
 package com.example.my_project.models;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.util.Set;
 
 import lombok.Data;
@@ -9,7 +9,6 @@ import lombok.Getter;
 
 @Entity
 @Data
-@Getter
 public class Comment {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,11 +1,12 @@
 package com.example.cms.controllers;
 
-import com.example.cms.models.ChatRoom;
-import com.example.cms.models.CreateChatRoomRequest;
-import com.example.cms.models.Message;
-import com.example.cms.models.User;
-import com.example.cms.service.ChatRoomService;
-import com.example.cms.service.MessageService;
+import com.example.my_project.models.ChatRoom;
+import com.example.my_project.models.Message;
+import com.example.my_project.models.User;
+import com.example.my_project.service.ChatRoomService;
+import com.example.my_project.service.MessageService;
+import com.example.my_project.service.UserService;
+import com.example.my_project.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -20,12 +21,16 @@ import java.util.List;
 @RequestMapping("/api/chatrooms")
 public class ChatController {
 
-    @Autowired
     private ChatRoomService chatRoomService;
+    private MessageService messageService;
+    private final UserService userService;
 
     @Autowired
-    private MessageService messageService;
-
+    public ChatController(ChatRoomService chatRoomService, MessageService messageService, UserService userService) {
+        this.chatRoomService = chatRoomService;
+        this.messageService = messageService;
+        this.userService = userService; 
+    }
     @GetMapping
     public List<ChatRoom> getAllChatRooms() {
         return chatRoomService.getAllChatRooms();
@@ -40,12 +45,11 @@ public class ChatController {
     public ChatRoom getChatRoomById(@PathVariable Long roomId) {
         return chatRoomService.getChatRoomById(roomId);
     }
-
-    @PostMapping
-    public ChatRoom createChatRoom(@RequestBody CreateChatRoomRequest request, @RequestHeader("user-id") Long creatorId) {
-        User creator = new User(); 
-        creator.setId(creatorId);
-        return chatRoomService.createChatRoom(request.getName(), request.getCourseId(), creator);
+    
+    @PostMapping("/{courseId}")
+    public ChatRoom createChatRoom(@PathVariable Long courseId, @RequestParam String name) {
+        User creator = userService.getCurrentUser().orElseThrow(() -> new RuntimeException("User not found"));
+        return chatRoomService.createChatRoom(name, courseId, creator);
     }
 
     @DeleteMapping("/{roomId}")

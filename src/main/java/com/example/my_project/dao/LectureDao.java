@@ -2,9 +2,11 @@ package com.example.my_project.dao;
 
 import com.example.my_project.models.Lecture;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.*;
 @Repository
 public class LectureDao {
     private final JdbcTemplate jdbcTemplate;

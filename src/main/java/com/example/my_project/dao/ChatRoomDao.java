@@ -25,8 +25,8 @@ public class ChatRoomDao {
                 chatRoom.getCourse().getId(),
                 chatRoom.getName(),
                 chatRoom.getWebsocketTopic(),
-                chatRoom.getCreatedAt(),
-                chatRoom.getUpdatedAt());
+                chatRoom.getCreatedAt()
+              );
     }
 
     public List<ChatRoom> findChatRoomsByCourseId(Long courseId) {
