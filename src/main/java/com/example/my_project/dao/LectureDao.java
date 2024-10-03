@@ -18,7 +18,7 @@ public class LectureDao {
     }
 
     public int addLecture(Lecture lecture) {
-        String sql = "INSERT INTO LECTURES(course_id, title, video_url, duration, thumbnail) VALUES(?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO lectures(course_id, title, video_url, duration, thumbnail) VALUES(?, ?, ?, ?, ?)";
         return jdbcTemplate.update(sql,
             lecture.getCourse().getId(),
             lecture.getTitle(),
@@ -29,7 +29,7 @@ public class LectureDao {
     }
 
     public List<Lecture> findLecturesByCourseId(Long courseId) {
-        String sql = "SELECT * FROM LECTURES WHERE course_id = ?";
+        String sql = "SELECT * FROM lectures WHERE course_id = ?";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Lecture.class), courseId);
     }
 }

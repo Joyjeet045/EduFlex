@@ -19,7 +19,7 @@ public class UserDao {
     }
 
     public int saveUser(User user) {
-        final String sql = "INSERT INTO USERS(username, password, first_name, last_name, email, join_date, age, dob, profile_picture, role) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        final String sql = "INSERT INTO users(username, password, first_name, last_name, email, join_date, age, dob, profile_picture, role) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         return jdbcTemplate.update(sql,
             user.getUsername(),
             user.getPassword(),
@@ -35,21 +35,21 @@ public class UserDao {
     }
 
     public Optional<User> findByUsername(String username) {
-        final String sql = "SELECT * FROM USERS WHERE username = ?";
+        final String sql = "SELECT * FROM users WHERE username = ?";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), username)
                 .stream()
                 .findFirst();
     }
 
     public Optional<User> findById(Long id) {
-        final String sql = "SELECT * FROM USERS WHERE id = ?";
+        final String sql = "SELECT * FROM users WHERE id = ?";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), id)
                 .stream()
                 .findFirst();
     }
 
     public List<User> findAll() {
-        final String sql = "SELECT * FROM USERS";
+        final String sql = "SELECT * FROM users";
         try {
             return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class));
         } catch (Exception e) {
@@ -58,7 +58,7 @@ public class UserDao {
     }
 
     public boolean isTeacher(String username) {
-        final String sql = "SELECT role FROM USERS WHERE username = ?";
+        final String sql = "SELECT role FROM users WHERE username = ?";
         return jdbcTemplate.queryForList(sql, String.class, username)
                 .stream()
                 .anyMatch(role -> UserRole.TEACHER.name().equals(role));

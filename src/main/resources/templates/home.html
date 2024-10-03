@@ -16,11 +16,9 @@
             <input type="text" id="instructor" placeholder="Filter by Instructor..." />
         </div>
     </header>
-    
     <main>
         <div id="course-list" class="course-list"></div>
     </main>
-    
     <script>
         fetch('../templates/navbar.html')
         .then(response => response.text())
@@ -29,7 +27,6 @@
         })
         .catch(error => console.error('Error loading navbar:', error));
     </script>
-    
     <script src="../static/js/home.js" type="module"></script>
 </body>
 </html>

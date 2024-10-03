@@ -1,35 +1,14 @@
 package com.example.my_project.models;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import java.time.Duration;
-import com.example.my_project.models.*;
-
-
 import lombok.Data;
-import lombok.Getter;
 
-@Entity
 @Data
-@Getter
 public class Lecture {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-
-  @ManyToOne
-  @JoinColumn(name = "course_id", nullable = false)
-  private Course course;
-
-  @Column(nullable = false, length = 100)
-  private String title;
-
-  
-  @Pattern(regexp = "^(https?|ftp)://.*$", message = "Invalid URL format")
-  private String videoUrl;
-
-  @Column(nullable = false)
-  private Duration duration; 
-  private String thumbnail;
-
+    private Long id;
+    private Course course;
+    private String title;
+    private String videoUrl;
+    private Duration duration;
+    private String thumbnail;
 }

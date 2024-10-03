@@ -17,19 +17,25 @@ public class CommentDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    // Method to save a comment
     public int saveComment(Comment comment) {
-        final String sql = "INSERT INTO COMMENTS(lecture_id, user_id, comment_content, upvotes, downvotes, reply_of) VALUES (?, ?, ?, ?, ?, ?)";
+        final String sql = "INSERT INTO comments (lecture_id, user_id, comment_content, upvotes, downvotes, reply_of) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
+
+        // Insert the comment into the database
         return jdbcTemplate.update(sql,
-            comment.getLecture().getId(),
-            comment.getUser().getId(),
-            comment.getCommentContent(),
-            comment.getUpvotes(),
-            comment.getDownvotes(),
-            comment.getReplyOf() != null ? comment.getReplyOf().getCommentId() : null
+                comment.getLecture().getId(),  // Lecture ID
+                comment.getUser().getId(),     // User ID (commenter)
+                comment.getCommentContent(),   // Comment content
+                comment.getUpvotes(),          // Upvotes
+                comment.getDownvotes(),        // Downvotes
+                comment.getReplyOf() != null ? comment.getReplyOf().getCommentId() : null // Reply reference
         );
     }
+
+    // Method to find comments by lecture ID
     public List<Comment> findByLectureId(Long lectureId) {
-        final String sql = "SELECT * FROM COMMENTS WHERE lecture_id = ?";
+        final String sql = "SELECT * FROM comments WHERE lecture_id = ?";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Comment.class), lectureId);
     }
 }

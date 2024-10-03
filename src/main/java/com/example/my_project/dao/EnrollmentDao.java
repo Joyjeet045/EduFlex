@@ -18,7 +18,7 @@ public class EnrollmentDao {
   }
 
   public int enrollLearner(Enrollment enrollment) {
-    String sql = "INSERT INTO ENROLLMENTS(course_id, learner_id, enrollment_date, progress) VALUES(?, ?, ?, ?)";
+    String sql = "INSERT INTO enrollments(course_id, learner_id, enrollment_date, progress) VALUES(?, ?, ?, ?)";
     return jdbcTemplate.update(sql,
       enrollment.getCourse().getId(),
       enrollment.getLearner().getId(),
@@ -28,7 +28,7 @@ public class EnrollmentDao {
   }
 
   public Optional<Enrollment> findEnrollmentByCourseAndLearner(Long courseId, Long learnerId) {
-    String sql = "SELECT * FROM ENROLLMENTS WHERE course_id = ? AND learner_id = ?";
+    String sql = "SELECT * FROM enrollments WHERE course_id = ? AND learner_id = ?";
     try {
       Enrollment enrollment = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Enrollment.class), courseId, learnerId);
       return Optional.of(enrollment);

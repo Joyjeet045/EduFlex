@@ -19,7 +19,7 @@ public class ChatRoomDao {
     }
 
     public int addChatRoom(ChatRoom chatRoom) {
-        String sql = "INSERT INTO CHATROOMS(course_id, name, websocket_topic, created_at, updated_at) VALUES(?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO chatrooms(course_id, name, websocket_topic, created_at, updated_at) VALUES(?, ?, ?, ?, ?)";
         return jdbcTemplate.update(sql,
             chatRoom.getCourse().getId(),
             chatRoom.getName(),
@@ -29,17 +29,17 @@ public class ChatRoomDao {
     }
 
     public List<ChatRoom> findChatRoomsByCourseId(Long courseId) {
-        String sql = "SELECT * FROM CHATROOMS WHERE course_id = ?";
+        String sql = "SELECT * FROM chatrooms WHERE course_id = ?";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ChatRoom.class), courseId);
     }
 
     public ChatRoom findChatRoomById(Long chatRoomId) {
-        String sql = "SELECT * FROM CHATROOMS WHERE id = ?";
+        String sql = "SELECT * FROM chatrooms WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ChatRoom.class), chatRoomId);
     }
 
     public List<ChatRoom> findAllChatRooms() {
-        String sql = "SELECT * FROM CHATROOMS";
+        String sql = "SELECT * FROM chatrooms";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ChatRoom.class));
     }
 
@@ -54,7 +54,7 @@ public class ChatRoomDao {
     }
 
     public int deleteChatRoom(Long chatRoomId) {
-        String sql = "DELETE FROM CHATROOMS WHERE id = ?";
+        String sql = "DELETE FROM chatrooms WHERE id = ?";
         return jdbcTemplate.update(sql, chatRoomId);
     }
 }

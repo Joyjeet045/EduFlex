@@ -20,7 +20,6 @@ public class MessageService {
     public int saveMessage(Message message) {
       return messageDao.save(message);
     }
-
     public void deleteMessage(Long messageId) {
       messageDao.deleteById(messageId);
     }
