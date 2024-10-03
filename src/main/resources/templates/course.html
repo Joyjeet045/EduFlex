@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Course Details</title>
+</head>
+<body>
+    <h1 th:text="${course.title}"></h1>
+
+    <div>
+        <strong>Description:</strong> <span th:text="${course.description}"></span>
+    </div>
+    <div>
+        <strong>Instructor:</strong> <span th:text="${course.instructor.name}"></span>
+    </div>
+    <div>
+        <strong>Category:</strong> <span th:text="${course.category}"></span>
+    </div>
+    <div>
+        <strong>Price:</strong> <span th:text="${course.price}"></span>
+    </div>
+    <div>
+        <strong>Start Date:</strong> <span th:text="${course.startDate}"></span>
+    </div>
+
+    <a href="/courses" class="btn btn-secondary">Back to Courses</a>
+</body>
+</html>

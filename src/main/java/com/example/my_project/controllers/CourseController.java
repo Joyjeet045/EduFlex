@@ -1,19 +1,19 @@
-package com.example.my_project.controller;
+package com.example.my_project.controllers;
 
-import com.example.my_project.models.*;
+import com.example.my_project.models.Course;
 import com.example.my_project.service.CourseService;
 import com.example.my_project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity; 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.*;
+import jakarta.validation.Valid;
 
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-@RestController
-@RequestMapping("/api/courses")
+@Controller
 public class CourseController {
+    
     private final CourseService courseService;
     private final UserService userService;
 
@@ -23,39 +23,35 @@ public class CourseController {
         this.userService = userService;
     }
 
-    @PostMapping("/{courseId}/enroll/{userId}")
-    public ResponseEntity<String> enrollUserToCourse(@PathVariable Long courseId, @PathVariable Long userId) {
-        Course course = courseService.findCourseById(courseId);
-        Optional<User> user = userService.getUserById(userId);
-        if (course!=null && user.isPresent()) {
-            courseService.enrollLearner(course, user.get());
-            return ResponseEntity.ok("Enrollment successful!");
-        } else {
-            return ResponseEntity.badRequest().body("Enrollment failed: Course or User not found.");
-        }
+    @GetMapping("/courses")
+    public String getAllCourses(Model model) {
+        model.addAttribute("courses", courseService.findAll());
+        return "course-list";  
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Course>> getAllCourses(
-        @RequestParam(value = "title", required = false) String title,
-        @RequestParam(value = "category", required = false) String category,
-        @RequestParam(value = "instructorId", required = false) Long instructorId) {
-        List<Course> courses = courseService.findAll(); 
-        if (title != null) {
-            courses = courses.stream()
-                    .filter(c -> c.getTitle().toLowerCase().contains(title.toLowerCase()))
-                    .collect(Collectors.toList());
+    @GetMapping("/course/{id}")
+    public String viewCourse(@PathVariable("id") Long id, Model model) {
+        Course course = courseService.findById(id)
+                .orElseThrow(() -> new RuntimeException("Course not found with id: " + id));
+        model.addAttribute("course", course);
+        return "course";
+    }
+
+    @GetMapping("/courses/add")
+    public String showAddCourseForm(Model model) {
+        model.addAttribute("course", new Course());
+        model.addAttribute("user", userService.getCurrentUser());
+        return "add-course";  
+    }
+
+    @PostMapping("/courses/add")
+    public String addCourse( @ModelAttribute Course course, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "add-course";  
         }
-        if (category != null) {
-            courses = courses.stream()
-                    .filter(c -> c.getCategory() == Category.valueOf(category))
-                    .collect(Collectors.toList());
-        }
-        if (instructorId != null) {
-            courses = courses.stream()
-                    .filter(c -> c.getInstructor().getId().equals(instructorId))
-                    .collect(Collectors.toList());
-        }
-        return ResponseEntity.ok(courses); 
+        course.setInstructor(userService.getCurrentUser());
+        courseService.addCourse(course);
+        model.addAttribute("message", "Course added successfully!");
+        return "redirect:/courses"; 
     }
 }

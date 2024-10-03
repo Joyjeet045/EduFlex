@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Course</title>
+</head>
+<body>
+    <h1>Add New Course</h1>
+    <form th:action="@{/courses/add}" th:object="${course}" method="post">
+        <div>
+            <label for="title">Title:</label>
+            <input type="text" id="title" th:field="*{title}" placeholder="Course Title">
+            <div th:if="${#fields.hasErrors('title')}" class="error">
+                <p th:errors="*{title}"></p>
+            </div>
+        </div>
+        <div>
+            <label for="description">Description:</label>
+            <textarea id="description" th:field="*{description}" placeholder="Course Description"></textarea>
+            <div th:if="${#fields.hasErrors('description')}" class="error">
+                <p th:errors="*{description}"></p>
+            </div>
+        </div>
+
+        <div>
+            <label for="language">Language:</label>
+            <select id="language" th:field="*{language}">
+                <option value="ENGLISH">English</option>
+                <option value="SPANISH">Spanish</option>
+                <!-- Add other languages -->
+            </select>
+        </div>
+
+        <div>
+            <label for="category">Category:</label>
+            <select id="category" th:field="*{category}">
+                <option value="TECHNOLOGY">Technology</option>
+                <option value="SCIENCE">Science</option>
+                <option value="HUMANITIES">Humanities</option>
+                <!-- Add other categories -->
+            </select>
+        </div>
+
+        <div>
+            <label for="price">Price:</label>
+            <input type="text" id="price" th:field="*{price}" placeholder="Course Price">
+        </div>
+
+        <div>
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" th:field="*{startDate}">
+        </div>
+
+        <div>
+            <label for="thumbnail">Thumbnail URL:</label>
+            <input type="text" id="thumbnail" th:field="*{thumbnail}" placeholder="Thumbnail URL">
+        </div>
+
+        <div>
+            <input type="submit" value="Add Course" class="btn btn-primary">
+        </div>
+
+        <a href="/courses" class="btn btn-secondary">Cancel</a>
+    </form>
+</body>
+</html>

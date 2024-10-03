@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Courses List</title>
+</head>
+<body>
+    <h1>Courses</h1>
+
+    <div>
+        <a href="/courses/add" class="btn btn-primary">Add New Course</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Instructor</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="course : ${courses}">
+                <td th:text="${course.title}"></td>
+                <td th:text="${course.description}"></td>
+                <td th:text="${course.instructor.name}"></td>
+                <td th:text="${course.category}"></td>
+                <td th:text="${course.price}"></td>
+                <td>
+                    <a th:href="@{/course/{id}(id=${course.id})}" class="btn btn-info">View</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

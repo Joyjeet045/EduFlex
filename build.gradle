@@ -18,23 +18,32 @@ repositories {
 }
 
 dependencies {
+    // Spring Boot starters
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.hibernate:hibernate-core:6.4.4.Final'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.security:spring-security-config'
     implementation 'org.springframework.security:spring-security-core'
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'mysql:mysql-connector-java:8.0.28'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // Hibernate Validator and Jakarta Validation API
+    implementation 'org.hibernate.validator:hibernate-validator:7.0.1.Final'
+    implementation 'jakarta.validation:jakarta.validation-api:2.0.2'
 
+    // MySQL connector
+    implementation 'mysql:mysql-connector-java:8.0.28'
+
+    // Thymeleaf Spring Security Integration
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+
+    // Lombok (for reducing boilerplate)
     compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok' 
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Testing dependencies
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }

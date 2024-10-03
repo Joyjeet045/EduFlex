@@ -1,4 +1,4 @@
-package com.example.my_project.services;
+package com.example.my_project.service;
 
 import com.example.my_project.dao.CommentDao;
 import com.example.my_project.models.Comment;
