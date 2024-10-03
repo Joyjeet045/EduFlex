@@ -3,30 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/home.css">
-    <title>All Courses</title>
+    <title>Home - Courses</title>
 </head>
 <body>
-    <div id="navbar-placeholder"></div>
-    <header>
-        <h1>All Courses</h1>
-        <div class="filter-container">
-            <input type="text" id="title" placeholder="Filter by Title..." />
-            <input type="text" id="category" placeholder="Filter by Category..." />
-            <input type="text" id="instructor" placeholder="Filter by Instructor..." />
-        </div>
-    </header>
-    <main>
-        <div id="course-list" class="course-list"></div>
-    </main>
-    <script>
-        fetch('../templates/navbar.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('navbar-placeholder').innerHTML = data;
-        })
-        .catch(error => console.error('Error loading navbar:', error));
-    </script>
-    <script src="../static/js/home.js" type="module"></script>
+    <h1>Welcome to Our Course Platform</h1>
+
+    <h2>Available Courses</h2>
+    <div th:if="${courses != null and !courses.isEmpty()}">
+        <ul>
+            <li th:each="course : ${courses}">
+                <h3 th:text="${course.title}">Course Title</h3>
+                <p th:text="${course.description}">Course Description</p>
+                <p>Category: <span th:text="${course.category}">Category</span></p>
+                <p>Instructor: <span th:text="${course.instructor.name}">Instructor Name</span></p>
+                <a th:href="@{/courses/{courseId}/enroll/{userId}(courseId=${course.id}, userId=${role})}">Enroll Now</a>
+            </li>
+        </ul>
+    </div>
+
+    <div th:if="${courses == null or courses.isEmpty()}">
+        <p>No courses available.</p>
+    </div>
 </body>
 </html>

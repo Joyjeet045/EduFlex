@@ -44,6 +44,7 @@ public class CourseService {
     enrollmentDao.enrollLearner(enrollment);
     return true;
   }
+
   public boolean addCourse(Course course){
     if (!userService.isCurrentUserTeacher()) {
       throw new IllegalArgumentException("Only users with the role TEACHER can add courses.");
@@ -58,5 +59,4 @@ public class CourseService {
       return false;
     }
   }
-
 }
