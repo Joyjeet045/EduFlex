@@ -31,7 +31,7 @@ dependencies {
 
     // Hibernate Validator and Jakarta Validation API
     implementation 'org.hibernate.validator:hibernate-validator:7.0.1.Final'
-    implementation 'jakarta.validation:jakarta.validation-api:2.0.2'
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.0'
 
     // MySQL connector
     implementation 'mysql:mysql-connector-java:8.0.28'

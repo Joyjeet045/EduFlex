@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class UserDao {
@@ -34,18 +33,16 @@ public class UserDao {
         );
     }
 
-    public Optional<User> findByUsername(String username) {
+    public User findByUsername(String username) {
         final String sql = "SELECT * FROM users WHERE username = ?";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), username)
-                .stream()
-                .findFirst();
+        List<User> users = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), username);
+        return users.isEmpty() ? null : users.get(0);
     }
 
-    public Optional<User> findById(Long id) {
+    public User findById(Long id) {
         final String sql = "SELECT * FROM users WHERE id = ?";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), id)
-                .stream()
-                .findFirst();
+        List<User> users = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), id);
+        return users.isEmpty() ? null : users.get(0);
     }
 
     public List<User> findAll() {
@@ -59,8 +56,7 @@ public class UserDao {
 
     public boolean isTeacher(String username) {
         final String sql = "SELECT role FROM users WHERE username = ?";
-        return jdbcTemplate.queryForList(sql, String.class, username)
-                .stream()
-                .anyMatch(role -> UserRole.TEACHER.name().equals(role));
+        List<String> roles = jdbcTemplate.queryForList(sql, String.class, username);
+        return roles.stream().anyMatch(role -> UserRole.TEACHER.name().equals(role));
     }
 }

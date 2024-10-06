@@ -1,65 +1,55 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet" href="/static/css/add-course.css"> 
     <title>Add Course</title>
 </head>
 <body>
-    <h1>Add New Course</h1>
-    <form th:action="@{/courses/add}" th:object="${course}" method="post">
+    <h1>Add Course</h1>
+    <form action="#" th:action="@{/courses/add}" th:object="${course}" method="post" enctype="multipart/form-data"> <!-- Include enctype for file uploads -->
         <div>
             <label for="title">Title:</label>
-            <input type="text" id="title" th:field="*{title}" placeholder="Course Title">
-            <div th:if="${#fields.hasErrors('title')}" class="error">
-                <p th:errors="*{title}"></p>
-            </div>
+            <input type="text" th:field="*{title}" required />
+            <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red;"></div>
         </div>
+        
         <div>
             <label for="description">Description:</label>
-            <textarea id="description" th:field="*{description}" placeholder="Course Description"></textarea>
-            <div th:if="${#fields.hasErrors('description')}" class="error">
-                <p th:errors="*{description}"></p>
-            </div>
+            <textarea th:field="*{description}" required></textarea>
+            <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" style="color: red;"></div>
         </div>
-
+        
         <div>
             <label for="language">Language:</label>
-            <select id="language" th:field="*{language}">
-                <option value="ENGLISH">English</option>
-                <option value="SPANISH">Spanish</option>
-                <!-- Add other languages -->
+            <select th:field="*{language}" required>
+                <option value="" disabled selected>Select Language</option>
+                <option th:each="lang : ${languages}" th:value="${lang}" th:text="${lang}"></option>
             </select>
+            <div th:if="${#fields.hasErrors('language')}" th:errors="*{language}" style="color: red;"></div>
         </div>
-
+        
         <div>
             <label for="category">Category:</label>
-            <select id="category" th:field="*{category}">
-                <option value="TECHNOLOGY">Technology</option>
-                <option value="SCIENCE">Science</option>
-                <option value="HUMANITIES">Humanities</option>
-                <!-- Add other categories -->
+            <select th:field="*{category}" required>
+                <option value="" disabled selected>Select Category</option>
+                <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
             </select>
+            <div th:if="${#fields.hasErrors('category')}" th:errors="*{category}" style="color: red;"></div>
         </div>
-
+        
         <div>
             <label for="price">Price:</label>
-            <input type="text" id="price" th:field="*{price}" placeholder="Course Price">
+            <input type="number" th:field="*{price}" required />
+            <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}" style="color: red;"></div>
         </div>
 
         <div>
-            <label for="startDate">Start Date:</label>
-            <input type="date" id="startDate" th:field="*{startDate}">
+            <label for="thumbnail">Thumbnail:</label>
+            <input type="file" id="thumbnail" name="thumbnail" accept="image/*" required /> 
+            <div th:if="${#fields.hasErrors('thumbnail')}" th:errors="*{thumbnail}" style="color: red;"></div>
         </div>
 
-        <div>
-            <label for="thumbnail">Thumbnail URL:</label>
-            <input type="text" id="thumbnail" th:field="*{thumbnail}" placeholder="Thumbnail URL">
-        </div>
-
-        <div>
-            <input type="submit" value="Add Course" class="btn btn-primary">
-        </div>
-
-        <a href="/courses" class="btn btn-secondary">Cancel</a>
+        <button type="submit">Add Course</button>
     </form>
 </body>
 </html>

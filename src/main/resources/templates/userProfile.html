@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${user.fullName} + ' Profile'">User Profile</title>
+    <link rel="stylesheet" href="/static/css/user-profile.css">
+</head>
+<body>
+    <div class="user-profile">
+        <h1 th:text="${user.fullName}">User Full Name</h1>
+        <div class="profile-info">
+            <img th:src="@{/uploads/profilePictures/{profilePicture}(profilePicture=${user.profilePicture})}" alt="User Picture" class="user-picture"/>
+            <p><strong>Email:</strong> <span th:text="${user.email}">user@example.com</span></p>
+            <p><strong>Username:</strong> <span th:text="${user.username}">Username</span></p>
+            <p><strong>Join Date:</strong> <span th:text="${#dates.format(user.joinDate, 'dd MMMM yyyy')}">Join Date</span></p>
+            <p><strong>Age:</strong> <span th:text="${user.age}">Age</span></p>
+        </div>
+        <h2>Courses Taught</h2>
+        <div class="courses-list">
+            <ul>
+                <li th:each="course : ${coursesTaught}">
+                    <a th:href="@{/courses/{id}(id=${course.id})}" th:text="${course.title}">Course Title</a>
+                    <span th:text="${#dates.format(course.startDate, 'dd MMMM yyyy')}">Start Date</span>
+                    <span th:text="${#numbers.formatDecimal(course.price, 2, 'COMMA')}">Price</span>
+                </li>
+            </ul>
+            <div th:if="${#lists.isEmpty(coursesTaught)}">
+              <p>No courses taught by this instructor yet.</p>
+            </div>
+        </div>
+        <div>
+          <a href="/courses" class="back-button">Back to Courses</a>
+        </div>
+    </div>
+</body>
+</html>

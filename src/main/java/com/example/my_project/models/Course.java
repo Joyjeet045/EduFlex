@@ -1,6 +1,5 @@
 package com.example.my_project.models;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import lombok.Data;

@@ -2,7 +2,6 @@ package com.example.my_project.service;
 
 import com.example.my_project.dao.UserDao;
 import com.example.my_project.models.User;
-import com.example.my_project.config.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,7 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -25,7 +23,7 @@ public class UserService {
     }
 
     public boolean registerUser(User user) {
-        if (userDao.findByUsername(user.getUsername()).isPresent()) {
+        if (userDao.findByUsername(user.getUsername()) != null) {
             return false;
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -33,12 +31,15 @@ public class UserService {
         return true;
     }
 
-    public Optional<User> loginUser(String username, String password) {
-        return userDao.findByUsername(username)
-            .filter(user -> passwordEncoder.matches(password, user.getPassword()));
+    public User loginUser(String username, String password) {
+        User user = userDao.findByUsername(username);
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            return user;
+        }
+        return null;
     }
 
-    public Optional<User> getUserById(Long id) {
+    public User getUserById(Long id) {
         return userDao.findById(id);
     }
 
@@ -46,9 +47,12 @@ public class UserService {
         return userDao.findAll();
     }
 
-    public Optional<User> getCurrentUser() {
-        return Optional.ofNullable(getCurrentUsername())
-            .flatMap(userDao::findByUsername);
+    public User getCurrentUser() {
+        String currentUsername = getCurrentUsername();
+        if (currentUsername != null) {
+            return userDao.findByUsername(currentUsername);
+        }
+        return null;
     }
 
     public String getCurrentUsername() {
@@ -57,8 +61,7 @@ public class UserService {
     }
 
     public boolean isCurrentUserTeacher() {
-        return Optional.ofNullable(getCurrentUsername())
-            .map(userDao::isTeacher)
-            .orElse(false);
+        String currentUsername = getCurrentUsername();
+        return currentUsername != null && userDao.isTeacher(currentUsername);
     }
 }

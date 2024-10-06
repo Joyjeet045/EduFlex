@@ -1,0 +1,130 @@
+/* user-profile.css */
+
+/* Overall layout */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+.user-profile {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+/* Profile Info */
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.user-picture {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%; /* Circular profile picture */
+  border: 3px solid #4CAF50; /* Green border */
+  margin-bottom: 15px;
+}
+
+.profile-info p {
+  margin: 5px 0;
+  font-size: 1.1em;
+}
+
+/* Courses List */
+h2 {
+  margin-top: 30px;
+  font-size: 2em;
+  color: #444;
+}
+
+.courses-list {
+  margin-top: 20px;
+}
+
+.courses-list ul {
+  list-style: none; /* Remove bullets */
+  padding: 0; /* Remove default padding */
+}
+
+.courses-list li {
+  background: #f9f9f9; /* Light background for courses */
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px; /* Inner spacing */
+  margin: 10px 0; /* Space between items */
+  display: flex; /* Flexbox for alignment */
+  justify-content: space-between; /* Space out items */
+  align-items: center; /* Center vertically */
+}
+
+.courses-list li a {
+  text-decoration: none; /* Remove underline */
+  color: #4CAF50; /* Green color */
+  font-weight: bold; /* Bold text */
+}
+
+.courses-list li a:hover {
+  text-decoration: underline; /* Underline on hover */
+}
+
+/* No Courses Message */
+.courses-list div {
+  text-align: center; /* Center text */
+  margin-top: 20px; /* Spacing above */
+  color: #777; /* Grey text */
+}
+
+/* Back Button */
+.back-button {
+  display: inline-block; /* Block for spacing */
+  margin-top: 20px; /* Space above */
+  padding: 10px 15px; /* Inner spacing */
+  background-color: #4CAF50; /* Green background */
+  color: white; /* White text */
+  text-decoration: none; /* No underline */
+  border-radius: 5px; /* Rounded corners */
+  transition: background-color 0.3s; /* Smooth transition */
+}
+
+.back-button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+/* Responsive styles */
+@media (max-width: 600px) {
+  .user-profile {
+      padding: 15px; /* Less padding on small screens */
+  }
+
+  h1 {
+      font-size: 1.8em; /* Smaller title */
+  }
+
+  .user-picture {
+      width: 100px; /* Smaller picture */
+      height: 100px; /* Smaller picture */
+  }
+
+  .profile-info p {
+      font-size: 1em; /* Smaller text */
+  }
+
+  h2 {
+      font-size: 1.5em; /* Smaller subheading */
+  }
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${course.title}">Course Title</title>
+    <link rel="stylesheet" href="/static/css/course-details.css">
+</head>
+<body>
+    <div class="course-details">
+        <h1 th:text="${course.title}">Course Title</h1>
+        <div class="thumbnail-container">
+            <img th:src="@{/uploads/thumbnails/{thumbnail}(thumbnail=${course.thumbnail})}" alt="Course Thumbnail" class="course-thumbnail"/>
+        </div>
+        <div class="course-info">
+            <p th:text="${course.description}">Course Description</p>            
+            <div class="additional-info">
+                <p><strong>Language:</strong> <span th:text="${course.language}">Language</span></p>
+                <p><strong>Start Date:</strong> <span th:text="${#dates.format(course.startDate, 'dd MMMM yyyy')}">Start Date</span></p>
+                <p><strong>Category:</strong> <span th:text="${course.category.name}">Category</span></p>
+                <p><strong>Price:</strong> <span th:text="${#numbers.formatDecimal(course.price, 2, 'COMMA')}">Price</span></p>
+            </div>
+            <div class="instructor-info">
+                <h2>Instructor</h2>
+                <div class="instructor-details">
+                    <img th:src="@{/uploads/profilePictures/{profilePicture}(profilePicture=${course.instructor.profilePicture})}" alt="Instructor Picture" class="instructor-picture"/>
+                    <div class="instructor-text">
+                        <h3>
+                          <a th:href="@{/user/profile/{id}(id=${course.instructor.id})}" th:text="${course.instructor.fullName}">Instructor Name</a>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <h3>Lectures</h3>
+            <ul>
+                <li th:each="lecture : ${course.lectures}">
+                    <a th:href="@{/lecture/{id}(id=${lecture.id})}" th:text="${lecture.title}">Lecture Title</a>
+                    <span th:text="${#dates.format(lecture.duration, 'HH:mm:ss')}">Duration</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
