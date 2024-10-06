@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
@@ -25,6 +26,7 @@ public class CourseController {
     private final CourseService courseService;
     private final UserService userService;
     private final LectureService lectureService;
+
     private final Logger logger = LoggerFactory.getLogger(CourseController.class);
 
     @Autowired
@@ -42,7 +44,7 @@ public class CourseController {
 
     @GetMapping("/course/{id}")
     public String viewCourse(@PathVariable("id") Long id, Model model) {
-        Course course = courseService.findCourseById(id);
+        Course course = courseService.findCourseById(id); 
         if (course == null) {
             throw new RuntimeException("Course not found with id: " + id);
         }
@@ -84,11 +86,13 @@ public class CourseController {
             result.rejectValue("thumbnail", "error.thumbnail", "Error uploading thumbnail: " + e.getMessage());
             return "add-course"; 
         }
+        
         User currentUser = userService.getCurrentUser();
         if (currentUser == null) {
             return "redirect:/login"; 
         }
-        course.setInstructor(currentUser);
+        
+        course.setInstructor(currentUser); 
         courseService.addCourse(course);
         model.addAttribute("message", "Course added successfully!");
         return "redirect:/courses";

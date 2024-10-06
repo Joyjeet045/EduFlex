@@ -42,7 +42,7 @@ public class CourseService {
 
         User currentUser = userService.getCurrentUser();
         if (currentUser != null) {
-            course.setInstructor(currentUser);
+            course.setInstructor(currentUser); 
             return courseDao.addCourse(course) > 0;  
         } else {
             return false;  

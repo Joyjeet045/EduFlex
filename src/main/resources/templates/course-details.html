@@ -7,33 +7,54 @@
 <body>
     <div class="course-details">
         <h1 th:text="${course.title}">Course Title</h1>
+        
         <div class="thumbnail-container">
-            <img th:src="@{/uploads/thumbnails/{thumbnail}(thumbnail=${course.thumbnail})}" alt="Course Thumbnail" class="course-thumbnail"/>
+            <img th:if="${course.thumbnail != null}" 
+                th:src="@{/uploads/thumbnails/{thumbnail}(thumbnail=${course.thumbnail})}" 
+                alt="Course Thumbnail" 
+                class="course-thumbnail"/>
+            <p th:if="${course.thumbnail == null}">No thumbnail available</p>
         </div>
+        
         <div class="course-info">
-            <p th:text="${course.description}">Course Description</p>            
+            <p th:text="${course.description}">Course Description</p>
             <div class="additional-info">
                 <p><strong>Language:</strong> <span th:text="${course.language}">Language</span></p>
-                <p><strong>Start Date:</strong> <span th:text="${#dates.format(course.startDate, 'dd MMMM yyyy')}">Start Date</span></p>
-                <p><strong>Category:</strong> <span th:text="${course.category.name}">Category</span></p>
-                <p><strong>Price:</strong> <span th:text="${#numbers.formatDecimal(course.price, 2, 'COMMA')}">Price</span></p>
+                <p><strong>Start Date:</strong> 
+                    <span th:text="${course.startDate != null ? #temporals.format(course.startDate, 'dd MMMM yyyy') : 'Not specified'}">Start Date</span>
+                </p>
+                <p><strong>Category:</strong> <span th:text="${course.category}">Category</span></p>
+                <p><strong>Price:</strong> 
+                    <span th:text="${course.price != null ? #numbers.formatCurrency(course.price) : 'Not specified'}">Price</span>
+                </p>           
             </div>
+            
             <div class="instructor-info">
                 <h2>Instructor</h2>
-                <div class="instructor-details">
-                    <img th:src="@{/uploads/profilePictures/{profilePicture}(profilePicture=${course.instructor.profilePicture})}" alt="Instructor Picture" class="instructor-picture"/>
+                <div class="instructor-details" th:if="${course != null and course.instructor != null}">
+                    <img th:if="${course.instructor.profilePicture != null}" 
+                            th:src="@{/uploads/profilePictures/{profilePicture}(profilePicture=${course.instructor.profilePicture})}" 
+                            alt="Instructor Picture" 
+                            class="instructor-picture"/>
+                    <p th:if="${course.instructor.profilePicture == null}">No profile picture available</p>
                     <div class="instructor-text">
                         <h3>
-                          <a th:href="@{/user/profile/{id}(id=${course.instructor.id})}" th:text="${course.instructor.fullName}">Instructor Name</a>
+                            <a th:href="@{/user/profile/{id}(id=${course.instructor.id})}" 
+                            th:text="${course.instructor.fullName != null ? course.instructor.fullName : 'Unnamed Instructor'}">Instructor Name</a>
                         </h3>
                     </div>
                 </div>
+                <p th:if="${course == null or course.instructor == null}">Instructor information not available</p>
             </div>
+            
             <h3>Lectures</h3>
             <ul>
-                <li th:each="lecture : ${course.lectures}">
+                <li th:if="${#lists.isEmpty(lectures)}">No lectures available.</li>
+                <li th:each="lecture : ${lectures}" th:if="${!#lists.isEmpty(lectures)}">
                     <a th:href="@{/lecture/{id}(id=${lecture.id})}" th:text="${lecture.title}">Lecture Title</a>
-                    <span th:text="${#dates.format(lecture.duration, 'HH:mm:ss')}">Duration</span>
+                    <span th:text="${lecture.duration != null ? 
+                        #temporals.format(T(java.time.LocalTime).ofSecondOfDay(lecture.duration.seconds), 'HH:mm:ss') : 'Not specified'}">
+                    </span>
                 </li>
             </ul>
         </div>

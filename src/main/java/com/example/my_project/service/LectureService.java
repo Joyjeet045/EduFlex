@@ -19,12 +19,6 @@ public class LectureService {
         this.userService = userService;
     }
 
-    public boolean addLecture(Lecture lecture) {
-        Long instructorId = userService.getCurrentUser().getId();
-        int result = lectureDao.addLecture(lecture, instructorId);
-        return result > 0;
-    }
-
     public List<Lecture> getLecturesByCourseId(Long courseId) {
         return lectureDao.findLecturesByCourseId(courseId);
     }
