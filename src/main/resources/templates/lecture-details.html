@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${lecture.title}">Lecture Details</title>
+    <link rel="stylesheet" th:href="@{/css/lecture-details.css}">
+</head>
+<body>
+    <div class="lecture-container">
+        <h2 th:text="${lecture.title}">Lecture Title</h2>
+        
+        <div class="lecture-thumbnail">
+            <img th:if="${lecture.thumbnail != null}" 
+                  th:src="${lecture.thumbnail}" 
+                  alt="Lecture Thumbnail" />
+            <p th:if="${lecture.thumbnail == null}">No thumbnail available.</p>
+        </div>
+        
+        <div class="lecture-video">
+            <h3>Lecture Video:</h3>
+            <div th:if="${lecture.videoUrl != null}">
+                <iframe th:src="@{${lecture.videoUrl.replace('watch?v=', 'embed/')}}" 
+                        width="640" height="360" 
+                        frameborder="0" allowfullscreen>
+                </iframe>
+            </div>
+            <p th:if="${lecture.videoUrl == null}">Sorry, the video is not available at this time.</p>
+        </div>      
+        <div class="lecture-info">
+            <p><strong>Duration:</strong> <span th:text="${lecture.duration != null ? lecture.duration.toMinutes() + ' minutes' : 'N/A'}"></span></p>
+        </div>
+        <!-- <div class="lecture-actions">
+            <a th:href="@{/course/{courseId}(courseId=${lecture.course.id})}" class="back-to-course">Back to Course</a>
+        </div>  -->
+    </div>
+</body>
+</html>

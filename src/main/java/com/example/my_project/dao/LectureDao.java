@@ -68,4 +68,14 @@ public class LectureDao {
             throw new RuntimeException("Error deleting lecture", e);
         }
     }
+
+    public Lecture findByIdAndCourseId(Long lectureId, Long courseId) {
+        String sql = "SELECT * FROM lectures WHERE id = ? AND course_id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Lecture.class), lectureId, courseId);
+        } catch (DataAccessException e) {
+            System.out.println("Error fetching lecture: " + e.getMessage());
+            throw new RuntimeException("Error fetching lecture", e);
+        }
+    }
 }

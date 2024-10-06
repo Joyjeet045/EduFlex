@@ -51,7 +51,10 @@
             <ul>
                 <li th:if="${#lists.isEmpty(lectures)}">No lectures available.</li>
                 <li th:each="lecture : ${lectures}" th:if="${!#lists.isEmpty(lectures)}">
-                    <a th:href="@{/lecture/{id}(id=${lecture.id})}" th:text="${lecture.title}">Lecture Title</a>
+                    <a th:href="@{/course/{c_id}/lecture/{id}(c_id=${course.id}, id=${lecture.id})}" 
+                    th:text="${lecture.title}">
+                        Lecture Title
+                    </a>
                     <span th:text="${lecture.duration != null ? 
                         #temporals.format(T(java.time.LocalTime).ofSecondOfDay(lecture.duration.seconds), 'HH:mm:ss') : 'Not specified'}">
                     </span>

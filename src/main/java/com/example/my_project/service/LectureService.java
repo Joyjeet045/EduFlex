@@ -22,4 +22,9 @@ public class LectureService {
     public List<Lecture> getLecturesByCourseId(Long courseId) {
         return lectureDao.findLecturesByCourseId(courseId);
     }
+
+    public Lecture findLectureById(Long lectureId, Long courseId) {
+        return lectureDao.findByIdAndCourseId(lectureId, courseId);
+    }
+
 }
