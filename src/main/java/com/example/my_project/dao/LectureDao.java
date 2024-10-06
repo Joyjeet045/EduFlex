@@ -37,9 +37,8 @@ public class LectureDao {
     public int updateLecture(Lecture lecture, Long instructorId) {
         if (!isInstructor(lecture.getCourse().getId(), instructorId)) {
             System.out.println("Unauthorized: You are not the instructor of this course.");
-            return 0; // Unauthorized action
+            return 0;
         }
-
         String sql = "UPDATE lectures SET title = ?, video_url = ?, duration = ?, thumbnail = ? WHERE id = ? AND course_id = ?";
         try {
             return jdbcTemplate.update(sql,

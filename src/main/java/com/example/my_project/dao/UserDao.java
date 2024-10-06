@@ -18,7 +18,7 @@ public class UserDao {
     }
 
     public int saveUser(User user) {
-        final String sql = "INSERT INTO users(username, password, first_name, last_name, email, join_date, age, dob, profile_picture, role) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        final String sql = "INSERT INTO users(username, password, first_name, last_name, email, join_date,role) VALUES(?, ?, ?, ?, ?, ?, ?)";
         return jdbcTemplate.update(sql,
             user.getUsername(),
             user.getPassword(),
@@ -26,9 +26,8 @@ public class UserDao {
             user.getLastName(),
             user.getEmail(),
             user.getJoinDate(),
-            user.getAge(),
-            user.getDob(),
-            user.getProfilePicture(),
+            // user.getDob(),
+            // user.getProfilePicture(),
             user.getRole().name()
         );
     }

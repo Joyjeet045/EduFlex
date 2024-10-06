@@ -60,8 +60,13 @@ public class UserService {
         return (auth != null && auth.isAuthenticated()) ? auth.getName() : null;
     }
 
+    public User findUser(String username) {
+        return userDao.findByUsername(username);
+    }
+
     public boolean isCurrentUserTeacher() {
         String currentUsername = getCurrentUsername();
         return currentUsername != null && userDao.isTeacher(currentUsername);
     }
 }
+

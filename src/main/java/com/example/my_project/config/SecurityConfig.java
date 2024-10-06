@@ -17,7 +17,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(authz -> authz
                 .anyRequest().permitAll() // Allows access to all pages
-            );
+            ).csrf().disable();;
 
         return http.build();
     }

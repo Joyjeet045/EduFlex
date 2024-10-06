@@ -13,7 +13,6 @@ public class User {
     private String email;
     private String password;
     private LocalDate joinDate;
-    private Integer age;
     private LocalDate dob;
     private String profilePicture;
     private UserRole role;

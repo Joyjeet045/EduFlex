@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+</head>
+<body>
+    <div class="registration-container">
+        <h2>Register</h2>
+        
+        <!-- <div th:if="${error}" class="error-message" th:text="${error}"></div> -->
+        
+        <form th:action="@{/register}" th:object="${user}" method="POST" enctype="multipart/form-data">
+            <label for="username">Username:</label>
+            <input type="text" id="username" th:field="*{username}" required>
+            <span th:if="${errors?.username}" th:text="${errors.username}" class="error"></span>
+
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" th:field="*{firstName}" required>
+            <span th:if="${errors?.firstName}" th:text="${errors.firstName}" class="error"></span>
+
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" th:field="*{lastName}" required>
+            <span th:if="${errors?.lastName}" th:text="${errors.lastName}" class="error"></span>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" th:field="*{email}" required>
+            <span th:if="${errors?.email}" th:text="${errors.email}" class="error"></span>
+
+            <label for="password1">Password:</label>
+            <input type="password" id="password1" name="password1" required>
+
+            <label for="password2">Confirm Password:</label>
+            <input type="password" id="password2" name="password2" required>
+            <span th:if="${errors?.password}" th:text="${errors.password}" class="error"></span>
+
+            <!-- <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" th:field="*{dob}" required>
+            <span th:if="${errors?.dob}" th:text="${errors.dob}" class="error"></span> -->
+
+            <!-- <label for="profilePicture">Profile Picture:</label>
+            <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
+            <span th:if="${errors?.profilePicture}" th:text="${errors.profilePicture}" class="error"></span> -->
+
+            <label for="role">Select Role:</label>
+            <select id="role" th:field="*{role}" required>
+                <option th:each="roleOpt : ${T(com.example.my_project.models.UserRole).values()}"
+                        th:value="${roleOpt}" th:text="${roleOpt}">
+                </option>
+            </select>
+            <span th:if="${errors?.role}" th:text="${errors.role}" class="error"></span>
+
+            <button type="submit">Register</button>
+        </form>
+    </div>
+</body>
+</html>
