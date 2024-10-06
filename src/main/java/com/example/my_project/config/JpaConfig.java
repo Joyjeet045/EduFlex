@@ -11,7 +11,7 @@ import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "com.example.my_project.repositories")
+@EnableJpaRepositories(basePackages = "com.example.my_project.dao")
 public class JpaConfig {
 
     @Autowired
