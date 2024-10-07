@@ -4,9 +4,12 @@ import com.example.my_project.dao.UserDao;
 import com.example.my_project.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
@@ -34,8 +37,14 @@ public class UserService {
     public User loginUser(String username, String password) {
         User user = userDao.findByUsername(username);
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getRole().name()));
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(),authorities);
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+            System.out.println("User authenticated: " + user.getUsername());
+            System.out.println("Security Context: " + SecurityContextHolder.getContext().getAuthentication());
             return user;
         }
+        System.out.println("Authentication failed for username: " + username);
         return null;
     }
 
@@ -49,8 +58,10 @@ public class UserService {
 
     public User getCurrentUser() {
         String currentUsername = getCurrentUsername();
+        System.out.println(currentUsername);
         if (currentUsername != null) {
-            return userDao.findByUsername(currentUsername);
+            User user=userDao.findByUsername(currentUsername);
+            return user;
         }
         return null;
     }

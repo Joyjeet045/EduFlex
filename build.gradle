@@ -28,7 +28,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.security:spring-security-config'
     implementation 'org.springframework.security:spring-security-core'
-
+    
     // Hibernate Validator and Jakarta Validation API
     implementation 'org.hibernate.validator:hibernate-validator:7.0.1.Final'
     implementation 'jakarta.validation:jakarta.validation-api:3.0.0'

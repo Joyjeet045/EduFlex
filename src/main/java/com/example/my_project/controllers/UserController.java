@@ -157,6 +157,7 @@ public class UserController {
             model.addAttribute("error", "Invalid username or password");
             return "login";
         }
+        
         return "redirect:/courses";
     }
 }
