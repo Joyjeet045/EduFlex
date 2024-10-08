@@ -1,9 +1,7 @@
 package com.example.my_project.models;
 
-
-import java.time.LocalDate;
 import lombok.Data;
-import lombok.Getter;
+import java.time.LocalDate;
 
 @Data
 public class Enrollment {
@@ -12,4 +10,5 @@ public class Enrollment {
     private User learner;
     private LocalDate enrollmentDate;
     private Double progress = 0.0;
+
 }
