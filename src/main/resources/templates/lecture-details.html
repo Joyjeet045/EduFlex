@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${lecture.title}">Lecture Details</title>
     <link rel="stylesheet" th:href="@{/css/lecture-details.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
-<body>
+<body th:attr="data-course-id=${course.id}, data-lecture-id=${lecture.id}">
     <div class="lecture-container">
         <h2 th:text="${lecture.title}">Lecture Title</h2>
         
@@ -43,56 +45,99 @@
                 <div th:each="comment : ${comments}">
                     <div class="comment-box" th:id="'comment-' + ${comment.id}">
                         <div class="comment-user">
-                            <strong th:text="${comment.user.username}">Username</strong>
+                            <strong th:text="${userNames[comment.userId]}">Username</strong>
+                            <span th:if="${userNames[comment.userId] == null}">Anonymous</span>
                             <span class="comment-date" th:text="${#dates.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">Date</span>
                         </div>
-                        <p th:text="${comment.message}"></p>
-                        <div class="comment-actions">
-                            <button class="like-button" th:data-comment-id="${comment.id}">Like (<span class="likes-count" th:text="${comment.likes}">0</span>)</button>
-                            <button class="dislike-button" th:data-comment-id="${comment.id}">Dislike (<span class="dislikes-count" th:text="${comment.dislikes}">0</span>)</button>
-                            <form method="post" th:action="@{/course/{courseId}/lecture/{lectureId}/comments/{commentId}/delete(courseId=${lecture.course.id}, lectureId=${lecture.id}, commentId=${comment.id})}" style="display:inline;">
-                                <button type="submit" onclick="return confirm('Are you sure you want to delete this comment?');">Delete</button>
-                            </form>
+                            <p th:text="${comment.message}"></p>
+                            <div class="comment-actions">
+                                <button class="like-button" 
+                                        th:data-comment-id="${comment.id}" 
+                                        onclick="likeFunction(this)">
+                                    <i class="fas fa-thumbs-up"></i> 
+                                    <span class="likes-count" th:text="${comment.likes}">0</span>
+                                </button>
+                                <button class="dislike-button" 
+                                        th:data-comment-id="${comment.id}" 
+                                        onclick="dislikeFunction(this)">
+                                    <i class="fas fa-thumbs-down"></i> 
+                                    <span class="dislikes-count" th:text="${comment.dislikes}">0</span>
+                                </button>
+                                <button class="delete-button" th:data-comment-id="${comment.id}" onclick="deleteFunction(this)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        document.querySelectorAll('.like-button').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const commentId = this.getAttribute('data-comment-id');
-                
-                fetch(`/course/${lecture.course.id}/lecture/${lecture.id}/comments/${commentId}/like`, {
-                    method: 'POST'
-                })
-                .then(response => response.json())
-                .then(data => {
-                    const likesCount = this.querySelector('.likes-count');
-                    likesCount.innerText = data.likes; 
-                })
-                .catch(error => console.error('Error:', error));
-            });
-        });
+    <script th:inline="javascript">
+        const bodyElement = document.querySelector('body');
+        const courseId = bodyElement.dataset.courseId;
+        const lectureId = bodyElement.dataset.lectureId;
 
-        document.querySelectorAll('.dislike-button').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const commentId = this.getAttribute('data-comment-id');
-                
-                fetch(`/course/${lecture.course.id}/lecture/${lecture.id}/comments/${commentId}/dislike`, {
+        function likeFunction(button) {
+            const commentId = button.getAttribute('data-comment-id');
+            event.preventDefault();
+            
+            console.log("Like button clicked for Comment ID:", commentId);
+            
+            fetch(`/course/${courseId}/lecture/${lectureId}/comments/${commentId}/like`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const likesCount = button.querySelector('.likes-count');
+                likesCount.innerText = data.likes; 
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        
+        function dislikeFunction(button) {
+            const commentId = button.getAttribute('data-comment-id');
+            event.preventDefault();
+            fetch(`/course/${courseId}/lecture/${lectureId}/comments/${commentId}/dislike`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const dislikesCount = button.querySelector('.dislikes-count');
+                dislikesCount.innerText = data.dislikes; 
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        function deleteFunction(button) {
+            const commentId = button.getAttribute('data-comment-id');
+            event.preventDefault();
+            
+            if (confirm("Are you sure you want to delete this comment?")) {
+                fetch(`/course/${courseId}/lecture/${lectureId}/comments/${commentId}/delete`, {
                     method: 'POST'
                 })
-                .then(response => response.json())
-                .then(data => {
-                    const dislikesCount = this.querySelector('.dislikes-count');
-                    dislikesCount.innerText = data.dislikes; 
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const commentBox = document.getElementById('comment-' + commentId);
+                    commentBox.remove();
                 })
                 .catch(error => console.error('Error:', error));
-            });
-        });
+            }
+        }
+
     </script>
 </body>
 </html>

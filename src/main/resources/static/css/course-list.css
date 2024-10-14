@@ -67,3 +67,26 @@ h1 {
 .action-link:hover {
   background-color: #0056b3;
 }
+
+
+.user-info {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+}
+
+.user-info p {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.user-info span {
+  font-weight: bold;
+  color: #007bff;
+}

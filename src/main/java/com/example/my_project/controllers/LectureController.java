@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
+import java.security.Principal;
+import org.springframework.http.ResponseEntity;
 
 @Controller
 @RequestMapping("/course") 
@@ -26,21 +28,36 @@ public class LectureController {
     public String showLectureDetails(@PathVariable Long courseId, @PathVariable Long lectureId, Model model) {
       Lecture lecture = lectureService.findLectureById(lectureId, courseId);
       model.addAttribute("lecture", lecture);
+
       List<Comment> comments = commentService.getCommentsByLecture(lectureId);
-      model.addAttribute("comments", comments); 
+      System.out.println(comments);
+      model.addAttribute("comments", comments);
+      
+      Map<Long, String> userNames = new HashMap<>();
+      for (Comment comment : comments) {
+          User user = userService.getUserById(comment.getUserId());
+          if (user != null) {
+              userNames.put(comment.getUserId(), user.getUsername());
+          } else {
+              userNames.put(comment.getUserId(), "Anonymous");
+          }
+      }
+      model.addAttribute("comments", comments);
+      model.addAttribute("userNames", userNames); 
+
       Course course = courseService.findCourseById(courseId);
       model.addAttribute("course", course); 
       return "lecture-details";
     }
 
     @PostMapping("/{courseId}/lecture/{lectureId}/comments")
-    public String addComment(@PathVariable Long courseId, @PathVariable Long lectureId, @ModelAttribute Comment comment) {
-      Lecture lecture = lectureService.findLectureById(lectureId, courseId);
-      User currentUser = userService.getCurrentUser();
-      System.out.println(currentUser);
-      if (lecture != null && currentUser !=null) {
-        comment.setLecture(lecture);
-        comment.setUser(currentUser); //current user got coming
+    public String addComment(@PathVariable Long courseId, @PathVariable Long lectureId, @ModelAttribute Comment comment, Principal principal) {
+      User currentUser = userService.findUser(principal.getName());
+      System.out.println("Current User: " + currentUser);
+
+      if (currentUser !=null) {
+        comment.setUserId(currentUser.getId());
+        comment.setLectureId(lectureId);
         commentService.saveComment(comment);
         return "redirect:/course/" + courseId + "/lecture/" + lectureId;
       } else {
@@ -49,15 +66,29 @@ public class LectureController {
     }
 
     @PostMapping("/{courseId}/lecture/{lectureId}/comments/{commentId}/like")
-    public String likeComment(@PathVariable Long courseId, @PathVariable Long lectureId, @PathVariable Long commentId) {
-      commentService.likeComment(commentId);
-      return "redirect:/course/" + courseId + "/lecture/" + lectureId; 
+    public ResponseEntity<Map<String, Integer>> likeComment(
+            @PathVariable Long courseId, 
+            @PathVariable Long lectureId, 
+            @PathVariable Long commentId) {
+        
+      int updatedLikes = commentService.likeComment(commentId);  
+      System.out.println(updatedLikes);      
+      Map<String, Integer> response = new HashMap<>();
+      response.put("likes", updatedLikes);        
+      return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{courseId}/lecture/{lectureId}/comments/{commentId}/dislike")
-    public String dislikeComment(@PathVariable Long courseId, @PathVariable Long lectureId, @PathVariable Long commentId) {
-      commentService.dislikeComment(commentId);
-      return "redirect:/course/" + courseId + "/lecture/" + lectureId; 
+    public ResponseEntity<Map<String, Integer>> dislikeComment(
+            @PathVariable Long courseId, 
+            @PathVariable Long lectureId, 
+            @PathVariable Long commentId) {
+        
+      int updatedLikes = commentService.dislikeComment(commentId);  
+      System.out.println(updatedLikes);      
+      Map<String, Integer> response = new HashMap<>();
+      response.put("dislikes", updatedLikes);        
+      return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{courseId}/lecture/{lectureId}/comments/{commentId}/delete")

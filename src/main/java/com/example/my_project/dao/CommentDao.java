@@ -26,8 +26,8 @@ public class CommentDao {
         String sql = "INSERT INTO comment (lecture_id, user_id, message, created_at, likes, dislikes) VALUES (?, ?, ?, ?, ?, ?)";
         
         return jdbcTemplate.update(sql,
-            comment.getLecture().getId(),
-            comment.getUser().getId(),
+            comment.getLectureId(), 
+            comment.getUserId(),    
             comment.getMessage(),
             comment.getCreatedAt(),
             comment.getLikes(),

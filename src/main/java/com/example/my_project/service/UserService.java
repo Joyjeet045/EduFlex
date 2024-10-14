@@ -35,18 +35,20 @@ public class UserService {
     }
 
     public User loginUser(String username, String password) {
-        User user = userDao.findByUsername(username);
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-            List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getRole().name()));
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(),authorities);
-            SecurityContextHolder.getContext().setAuthentication(authToken);
-            System.out.println("User authenticated: " + user.getUsername());
-            System.out.println("Security Context: " + SecurityContextHolder.getContext().getAuthentication());
-            return user;
+        User user = userDao.findByUsername(username);        
+        if (user == null) {
+            System.out.println("User not found for username: " + username);
+            return null;
+        }        
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            System.out.println("Authentication successful for username: " + username);
+            return user; 
+        } else {
+            System.out.println("Password mismatch for username: " + username);
         }
-        System.out.println("Authentication failed for username: " + username);
-        return null;
+        return null; 
     }
+
 
     public User getUserById(Long id) {
         return userDao.findById(id);

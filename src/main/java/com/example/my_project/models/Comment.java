@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 public class Comment {
   private Long id;
-  private Lecture lecture; 
-  private User user;       
+  private Long userId;
+  private Long lectureId; 
   private String message;
   private Timestamp createdAt; 
   private int likes;       

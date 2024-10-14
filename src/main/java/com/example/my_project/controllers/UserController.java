@@ -143,7 +143,8 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String showLoginForm() {
+    public String showLoginForm(Model model) {
+        model.addAttribute("user", new User());
         return "login"; 
     }
 
@@ -152,6 +153,7 @@ public class UserController {
     public String postLogin(@RequestParam String username,
                             @RequestParam String password,
                             Model model) {
+        System.out.println("Login attempt with username: " + username); 
         User user = userService.loginUser(username, password);
         if (user == null) {
             model.addAttribute("error", "Invalid username or password");

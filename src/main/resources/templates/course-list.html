@@ -6,6 +6,11 @@
 </head>
 <body>
     <h1>All Courses</h1>
+
+    <div class="user-info">
+        <p th:if="${username}">Welcome, <span th:text="${username}"></span>!</p>
+    </div>
+
     <div class="course-container">
         <div th:each="course : ${courses}" class="course-card">
             <img th:src="@{/uploads/thumbnails/${course.thumbnail}}" alt="Course Thumbnail" />

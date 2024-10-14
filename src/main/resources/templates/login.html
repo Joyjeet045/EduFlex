@@ -9,13 +9,19 @@
 <body>
     <div class="login-container">
         <h2>Login</h2>
+        <div th:if="${param.error}" class="error-message">
+            <p>Invalid username or password</p>
+        </div>
+        
         <form th:action="@{/login}" method="POST">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
 
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
-
+            <label>
+                <input type="checkbox" name="remember-me"> Remember me
+            </label>        
             <button type="submit">Login</button>
         </form>
     </div>

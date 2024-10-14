@@ -19,6 +19,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
+import java.security.Principal;
 
 @Controller
 public class CourseController {
@@ -37,7 +38,9 @@ public class CourseController {
     }
 
     @GetMapping("/courses")
-    public String getAllCourses(Model model) {
+    public String getAllCourses(Model model,Principal principal) {
+        String username = principal.getName();
+        model.addAttribute("username", username);
         model.addAttribute("courses", courseService.findAll());
         return "course-list";  
     }

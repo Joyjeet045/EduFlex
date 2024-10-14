@@ -41,8 +41,8 @@ public class CommentService {
     }
 
     public int dislikeComment(Long commentId) {
-      commentDao.updateDislikes(commentId, 1);
-      return commentDao.getDislikesCount(commentId);
+        commentDao.updateDislikes(commentId, 1);
+        return commentDao.getDislikesCount(commentId);
     }
 
 }

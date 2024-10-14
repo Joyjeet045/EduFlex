@@ -29,5 +29,4 @@ public class EnrollmentController {
       return "redirect:/course/" + courseId + "?error=" + e.getMessage();
     }
   }
-  
 }
