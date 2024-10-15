@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class Lecture {
     private Long id;
-    private Course course;
+    private Long courseId;
     private String title;
     private String videoUrl;
     private Duration duration;

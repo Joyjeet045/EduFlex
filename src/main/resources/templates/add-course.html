@@ -44,6 +44,12 @@
         </div>
 
         <div>
+            <label for="maxParticipants">Max Participants:</label>
+            <input type="number" th:field="*{maxParticipants}" min="1" required />
+            <div th:if="${#fields.hasErrors('maxParticipants')}" th:errors="*{maxParticipants}" style="color: red;"></div>
+        </div>
+
+        <div>
             <label for="thumbnail">Thumbnail:</label>
             <input type="file" id="thumbnail" name="thumbnail" accept="image/*" required /> 
             <div th:if="${#fields.hasErrors('thumbnail')}" th:errors="*{thumbnail}" style="color: red;"></div>

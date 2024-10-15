@@ -60,9 +60,15 @@
                     </span>
                 </li>
             </ul>
-            <div class="enroll-section">
-                <a th:href="@{/course/{id}/enroll(id=${course.id})}" class="enroll-button">Enroll Now</a>
-            </div>            
+            <div class="enroll-section" th:if="${#lists.size(enrolled) < course.maxParticipants}">
+                <form th:action="@{/course/{courseId}/enroll(courseId=${course.id})}" method="post">
+                    <button type="submit" class="enroll-button">Enroll Now</button>
+                </form>
+                <p><strong>Seats Left:</strong> <span th:text="${course.maxParticipants - #lists.size(enrolled)}">0</span></p>
+            </div>
+            <p th:if="${course.maxParticipants <= #lists.size(enrolled)}" style="color: red;">
+                Enrollment is full. You cannot join this course.
+            </p>
         </div>
     </div>
 </body>

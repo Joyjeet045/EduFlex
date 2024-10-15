@@ -31,17 +31,18 @@ public class CourseDao {
             throw new RuntimeException("Error checking course existence", e);
         }
 
-        final String insertSql = "INSERT INTO courses (title, description, language, instructor_id, start_date, category, price, thumbnail) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        final String insertSql = "INSERT INTO courses (title, description, language, instructor_id, start_date, category, price, thumbnail, max_participants) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             return jdbcTemplate.update(insertSql,
                 course.getTitle(),
                 course.getDescription(),
                 course.getLanguage().name(),
-                course.getInstructor().getId(),
+                course.getInstructor(),
                 course.getStartDate(),
                 course.getCategory().name(),
                 course.getPrice(),
-                course.getThumbnail()
+                course.getThumbnail(),
+                course.getMaxParticipants()
             );
         } catch (DataAccessException e) {
             System.out.println("Error adding course: " + e.getMessage());
@@ -78,4 +79,36 @@ public class CourseDao {
             throw new RuntimeException("Error fetching courses by instructor ID", e);
         }
     }
+
+    public List<Long> getEnrolledLearnerIds(Long courseId) {
+        String sql = "SELECT learner_id FROM enrollments WHERE course_id = ?";
+        try {
+            return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("learner_id"), courseId);
+        } catch (DataAccessException e) {
+            System.out.println("Error fetching enrolled learner IDs: " + e.getMessage());
+            throw new RuntimeException("Error fetching enrolled learner IDs", e);
+        }
+    }
+
+    public int updateCourse(Course course) {
+        final String updateSql = "UPDATE courses SET title = ?, description = ?, language = ?, instructor_id = ?, start_date = ?, category = ?, price = ?, thumbnail = ?, max_participants = ? WHERE id = ?";
+        try {
+            return jdbcTemplate.update(updateSql,
+                course.getTitle(),
+                course.getDescription(),
+                course.getLanguage().name(),
+                course.getInstructor(),
+                course.getStartDate(),
+                course.getCategory().name(),
+                course.getPrice(),
+                course.getThumbnail(),
+                course.getMaxParticipants(),
+                course.getId() 
+            );
+        } catch (DataAccessException e) {
+            System.out.println("Error updating course: " + e.getMessage());
+            throw new RuntimeException("Error updating course in the database", e);
+        }
+    }
+
 }

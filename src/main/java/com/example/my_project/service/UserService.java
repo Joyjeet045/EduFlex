@@ -57,29 +57,8 @@ public class UserService {
     public List<User> getAllUsers() {
         return userDao.findAll();
     }
-
-    public User getCurrentUser() {
-        String currentUsername = getCurrentUsername();
-        System.out.println(currentUsername);
-        if (currentUsername != null) {
-            User user=userDao.findByUsername(currentUsername);
-            return user;
-        }
-        return null;
-    }
-
-    public String getCurrentUsername() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return (auth != null && auth.isAuthenticated()) ? auth.getName() : null;
-    }
-
     public User findUser(String username) {
         return userDao.findByUsername(username);
-    }
-
-    public boolean isCurrentUserTeacher() {
-        String currentUsername = getCurrentUsername();
-        return currentUsername != null && userDao.isTeacher(currentUsername);
     }
 }
 

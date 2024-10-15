@@ -11,12 +11,10 @@ import java.util.List;
 public class LectureService {
 
     private final LectureDao lectureDao;
-    private final UserService userService;
 
     @Autowired
-    public LectureService(LectureDao lectureDao, UserService userService) {
+    public LectureService(LectureDao lectureDao) {
         this.lectureDao = lectureDao;
-        this.userService = userService;
     }
 
     public List<Lecture> getLecturesByCourseId(Long courseId) {

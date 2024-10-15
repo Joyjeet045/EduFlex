@@ -23,24 +23,22 @@ public class EnrollmentService {
     this.userService = userService;
   }
 
-  public Enrollment enrollUserInCourse(Long courseId, Long userId) {
-    Course course=courseService.findCourseById(courseId);
-    User user=userService.getUserById(userId);
-    if(course!=null && user!=null){
+  public boolean enrollUserInCourse(Long courseId, Long userId) {
+    if(courseId!=null && userId!=null){
       Enrollment existingEnrollment = enrollmentDao.findByUserAndCourse(userId, courseId);
       if(existingEnrollment!=null){
         System.out.println("User is already enrolled in this course.");
-        return existingEnrollment;
+        return false;
       }
       else{
         Enrollment newEnrollment = new Enrollment();
-        newEnrollment.setCourse(course);
-        newEnrollment.setLearner(user);
+        newEnrollment.setCourseId(courseId);
+        newEnrollment.setLearnerId(userId);
         newEnrollment.setEnrollmentDate(LocalDate.now());
         newEnrollment.setProgress(0.0);
 
         enrollmentDao.save(newEnrollment);
-        return newEnrollment;
+        return true;
       }
     }
     else{
@@ -52,8 +50,5 @@ public class EnrollmentService {
   }
   public List<Enrollment> getEnrollmentsByCourse(Long courseId) {
     return enrollmentDao.findByCourseId(courseId);
-  }
-  public Enrollment getEnrollmentByUserAndCourse(Long userId, Long courseId) {
-      return enrollmentDao.findByUserAndCourse(userId, courseId);
   }
 }

@@ -35,7 +35,7 @@ public class LectureDao {
     }
 
     public int updateLecture(Lecture lecture, Long instructorId) {
-        if (!isInstructor(lecture.getCourse().getId(), instructorId)) {
+        if (!isInstructor(lecture.getCourseId(), instructorId)) {
             System.out.println("Unauthorized: You are not the instructor of this course.");
             return 0;
         }
@@ -47,7 +47,7 @@ public class LectureDao {
                 lecture.getDuration().toMinutes(),
                 lecture.getThumbnail(),
                 lecture.getId(),
-                lecture.getCourse().getId()
+                lecture.getCourseId()
             );
         } catch (DataAccessException e) {
             System.out.println("Error updating lecture: " + e.getMessage());

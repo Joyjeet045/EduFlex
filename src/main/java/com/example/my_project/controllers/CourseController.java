@@ -20,6 +20,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 import java.security.Principal;
+import java.security.Principal;
 
 @Controller
 public class CourseController {
@@ -27,14 +28,16 @@ public class CourseController {
     private final CourseService courseService;
     private final UserService userService;
     private final LectureService lectureService;
+    private final EnrollmentService enrollmentService;
 
     private final Logger logger = LoggerFactory.getLogger(CourseController.class);
 
     @Autowired
-    public CourseController(CourseService courseService, UserService userService, LectureService lectureService) {
+    public CourseController(CourseService courseService, UserService userService, LectureService lectureService,EnrollmentService enrollmentService) {
         this.courseService = courseService;
         this.userService = userService;
         this.lectureService = lectureService;
+        this.enrollmentService=enrollmentService;
     }
 
     @GetMapping("/courses")
@@ -51,7 +54,12 @@ public class CourseController {
         if (course == null) {
             throw new RuntimeException("Course not found with id: " + id);
         }
+        List<Enrollment> enrollments = enrollmentService.getEnrollmentsByCourse(id);
+        List<Long> learnerIds = enrollments.stream()
+                                    .map(Enrollment::getLearnerId)
+                                    .toList();
         model.addAttribute("course", course);
+        model.addAttribute("enrolled",learnerIds);
         List<Lecture> lectures = lectureService.getLecturesByCourseId(id);
         model.addAttribute("lectures", lectures);
         return "course-details";
@@ -60,7 +68,6 @@ public class CourseController {
     @GetMapping("/courses/add")
     public String showAddCourseForm(Model model) {
         model.addAttribute("course", new Course());
-        model.addAttribute("user", userService.getCurrentUser());
         model.addAttribute("languages", Language.values());
         model.addAttribute("categories", Category.values());
         return "add-course";
@@ -70,7 +77,7 @@ public class CourseController {
     public String addCourse(@Valid @ModelAttribute Course course,
                             @RequestParam("thumbnail") MultipartFile thumbnailFile,
                             BindingResult result,
-                            Model model) {
+                            Model model,Principal principal) {
         if (result.hasErrors()) {
             return "add-course"; 
         }
@@ -89,13 +96,11 @@ public class CourseController {
             result.rejectValue("thumbnail", "error.thumbnail", "Error uploading thumbnail: " + e.getMessage());
             return "add-course"; 
         }
-        
-        User currentUser = userService.getCurrentUser();
+        User currentUser = userService.findUser(principal.getName());
         if (currentUser == null) {
             return "redirect:/login"; 
         }
-        
-        course.setInstructor(currentUser); 
+        course.setInstructor(currentUser.getId()); 
         courseService.addCourse(course);
         model.addAttribute("message", "Course added successfully!");
         return "redirect:/courses";

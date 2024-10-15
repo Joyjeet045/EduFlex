@@ -6,9 +6,8 @@ import java.time.LocalDate;
 @Data
 public class Enrollment {
     private Long id;
-    private Course course;
-    private User learner;
+    private Long courseId;
+    private Long learnerId;
     private LocalDate enrollmentDate;
     private Double progress = 0.0;
-
 }

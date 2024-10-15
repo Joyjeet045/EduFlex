@@ -36,14 +36,15 @@ public class CourseService {
     }
 
     public boolean addCourse(Course course) {
-        if (!userService.isCurrentUserTeacher()) {
-            throw new IllegalArgumentException("Only users with the role TEACHER can add courses.");
-        }
-
-        User currentUser = userService.getCurrentUser();
-        if (currentUser != null) {
-            course.setInstructor(currentUser); 
+        if (course != null) {
             return courseDao.addCourse(course) > 0;  
+        } else {
+            return false;  
+        }
+    }
+    public boolean updateCourse(Course course) {
+        if (course != null) {
+            return courseDao.updateCourse(course) > 0;  
         } else {
             return false;  
         }
