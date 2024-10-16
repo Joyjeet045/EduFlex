@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="/css/dashboard.css"> 
+</head>
+<body>
+    <div class="container">
+        <h1 class="dashboard-heading">Your Enrolled Courses</h1>
+
+        <div class="course-container">
+            <div th:each="course : ${enrolledCourses}" class="course-card">
+                <div th:if="${course.thumbnail != null}">
+                    <img th:src="@{/uploads/thumbnails/${course.thumbnail}}" alt="Course Thumbnail" class="course-thumbnail"/>
+                </div>
+                <div th:if="${course.thumbnail == null}">
+                    <img th:src="@{/uploads/thumbnails/default-thumbnail.png}" alt="Default Thumbnail" class="course-thumbnail"/>
+                </div>
+                <div class="course-info">
+                    <h2 class="course-title" th:text="${course.title}"></h2>
+                    <p class="course-description" th:text="${course.description}"></p>
+                    <a th:href="@{/course/{id}(id=${course.id})}" class="resume-button">Resume Course</a>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(enrolledCourses)}" class="no-courses-message">
+            <p>You are not enrolled in any courses yet. Start exploring!</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -20,7 +20,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 import java.security.Principal;
-import java.security.Principal;
 
 @Controller
 public class CourseController {

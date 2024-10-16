@@ -60,5 +60,8 @@ public class UserService {
     public User findUser(String username) {
         return userDao.findByUsername(username);
     }
+    public boolean isTeacher(String username) {
+        return userDao.isTeacher(username);
+    }
 }
 

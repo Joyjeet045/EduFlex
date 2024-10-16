@@ -3,24 +3,35 @@
 <head>
     <title>Course List</title>
     <link rel="stylesheet" href="/css/course-list.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome for icons -->
 </head>
 <body>
-    <h1>All Courses</h1>
+    <div class="container">
+        <h1>All Courses</h1>
 
-    <div class="user-info">
-        <p th:if="${username}">Welcome, <span th:text="${username}"></span>!</p>
-    </div>
-
-    <div class="course-container">
-        <div th:each="course : ${courses}" class="course-card">
-            <img th:src="@{/uploads/thumbnails/${course.thumbnail}}" alt="Course Thumbnail" />
-            <div class="course-info">
-                <h2 class="course-title" th:text="${course.title}"></h2>
-                <p class="course-description" th:text="${course.description}"></p>
-                <a th:href="@{/course/{id}(id=${course.id})}" class="action-link">View Details</a>
+        <div class="user-info">
+            <p th:if="${username}" class="greeting">Welcome, <span th:text="${username}"></span>!</p>
+            <div class="dashboard-btn-container">
+                <a th:href="@{/dashboard}" class="dashboard-btn"><i class="fas fa-tachometer-alt"></i> Go to Dashboard</a>
             </div>
         </div>
+
+        <hr class="divider"/>
+
+        <div class="course-container">
+            <div th:each="course : ${courses}" class="course-card">
+                <img th:src="@{/uploads/thumbnails/${course.thumbnail}}" alt="Course Thumbnail" class="course-thumbnail"/>
+                <div class="course-info">
+                    <h2 class="course-title" th:text="${course.title}"></h2>
+                    <p class="course-description" th:text="${course.description}"></p>
+                    <a th:href="@{/course/{id}(id=${course.id})}" class="action-link view-details-btn">View Details</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="add-course-btn-container">
+            <a th:href="@{/courses/add}" class="action-link add-course-btn">Add New Course</a>
+        </div>
     </div>
-    <a href="/courses/add" class="action-link">Add New Course</a>
 </body>
 </html>
