@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Application</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/chat.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+
+</head>
+<body>
+  <div class="chat-app">
+    <div class="channel-list" id="channelList">
+      <button class="toggle-btn" id="toggleBtn">
+          <i class="fas fa-chevron-right"></i> Channels
+      </button>
+      <ul id="channelItems">
+          <li th:each="channel : ${channels}" 
+              class="channel-item" 
+              th:data-id="${channel.id}" 
+              th:onclick="'selectChannel(this, ' + ${channel.id} + ')'">
+              #<span th:text="${channel.name}"></span>
+          </li>
+      </ul>
+  </div>
+    <div class="message-area">
+      <h2 id="channelHeader">Please select a channel to view messages.</h2>
+      <ul id="messageList"></ul>
+      <div class="message-input">
+        <input type="text" id="messageInput" placeholder="Type your message..." />
+        <button id="sendMessageBtn" onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  let stompClient = null;
+  let currentChannelId = null;
+  let currentSubscription = null;  // Add this to track current subscription
+
+  // Connect WebSocket once when page loads
+  function connectWebSocket() {
+      const socket = new SockJS('/ws');
+      stompClient = Stomp.over(socket);
+      stompClient.connect({}, function(frame) {
+          console.log('Connected: ' + frame);
+          // If there's a channel selected, subscribe to it
+          if (currentChannelId) {
+              subscribeToChannel(currentChannelId);
+          }
+      }, function(error) {
+          console.error('STOMP error:', error);
+          // Attempt to reconnect after a delay
+          setTimeout(connectWebSocket, 5000);
+      });
+  }
+
+  // Separate subscription function
+  function subscribeToChannel(channelId) {
+      // Unsubscribe from previous channel if any
+      if (currentSubscription) {
+          currentSubscription.unsubscribe();
+      }
+      
+      currentSubscription = stompClient.subscribe('/topic/channel/' + channelId, function(message) {
+          displayMessage(JSON.parse(message.body));
+      });
+  }
+
+  function selectChannel(element, channelId) {
+      document.querySelectorAll('.channel-item').forEach(function(channel) {
+          channel.classList.remove('active');
+      });
+      element.classList.add('active');
+      currentChannelId = channelId;
+      
+      // Fetch existing messages
+      fetch('/api/messages/' + channelId)
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+              return response.json();
+          })
+          .then(data => {
+              let channelHeader = document.getElementById('channelHeader');
+              channelHeader.innerHTML = 'Messages in #' + data.channel.name;
+              
+              let messageList = document.getElementById('messageList');
+              messageList.innerHTML = '';
+              
+              data.messages.forEach(msg => {
+                  displayMessage(msg);
+              });
+
+              // Subscribe to new channel if WebSocket is connected
+              if (stompClient && stompClient.connected) {
+                  subscribeToChannel(channelId);
+              }
+          })
+          .catch(error => {
+              console.error('There was a problem with the fetch operation:', error);
+          });
+  }
+
+  function displayMessage(message) {
+      let messageList = document.getElementById('messageList');
+      let messageItem = document.createElement('li');
+      fetch(`/api/users/${message.userId}`)
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+              return response.json();
+          })
+          .then(user => {
+              const messageContent = document.createElement('div');
+              messageContent.innerHTML = `
+                  <small>${user.username}</small>
+                  <p>${message.content}</p>
+              `;
+              messageItem.appendChild(messageContent);
+              messageList.appendChild(messageItem);
+              // Auto scroll to bottom
+              messageList.scrollTop = messageList.scrollHeight;
+          })
+          .catch(error => {
+              console.error('There was a problem fetching the username:', error);
+          });
+  }
+
+  function sendMessage() {
+      const messageInput = document.getElementById('messageInput');
+      const messageContent = messageInput.value.trim();
+      if (messageContent && currentChannelId && stompClient && stompClient.connected) {
+          stompClient.send("/app/channel/"+currentChannelId+"/sendMessage", 
+              {}, 
+              JSON.stringify({ content: messageContent })
+          );
+          messageInput.value = '';
+      }
+  }
+
+  // Add event listener for Enter key
+  document.getElementById('messageInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+      }
+  });
+
+  // Connect WebSocket when page loads
+  connectWebSocket();
+  document.getElementById('toggleBtn').onclick = function() {
+      var channelList = document.getElementById('channelList');
+      var icon = this.querySelector('i');
+      if (channelList.style.width === '30px') {
+        channelList.style.width = '250px';
+        icon.classList.remove('fa-chevron-right');
+        icon.classList.add('fa-chevron-down');
+      } else {
+        channelList.style.width = '30px';
+        icon.classList.remove('fa-chevron-down');
+        icon.classList.add('fa-chevron-right');
+      }
+    };
+
+</script>
+</body>
+</html>

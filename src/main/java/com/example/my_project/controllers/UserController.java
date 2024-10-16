@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.http.ResponseEntity;
 import jakarta.validation.Valid;
 import java.util.*;
 import java.io.IOException;  
@@ -163,4 +163,15 @@ public class UserController {
         
         return "redirect:/courses";
     }
+
+    @GetMapping("/api/users/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
+        User user = userService.getUserById(userId);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

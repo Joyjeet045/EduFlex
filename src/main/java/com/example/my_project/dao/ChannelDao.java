@@ -27,12 +27,13 @@ public class ChannelDao {
     }
   }
   public List<Channel> findByCourseId(Long courseId) {
-    String sql = "SELECT * FROM channels WHERE course_id = ?";
-    try {
-      return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Channel.class), courseId);
-    } catch (DataAccessException e) {
-      System.out.println("Error fetching channels by course ID: " + e.getMessage());
-      throw new RuntimeException("Error fetching channels by course ID", e);
+        String sql = "SELECT * FROM channels WHERE course_id = ?";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Channel.class), courseId);
     }
+
+  public Channel findById(Long channelId) {
+      String sql = "SELECT * FROM channels WHERE id = ?";
+      return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Channel.class), channelId);
   }
+
 }

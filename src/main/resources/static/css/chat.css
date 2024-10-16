@@ -1,0 +1,139 @@
+/* Reset some default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.chat-app {
+  display: flex;
+  width: 90%;
+  max-width: 800px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.channel-list {
+  background-color: #ffffff;
+  border-right: 1px solid #ddd;
+  width: 250px;
+  transition: width 0.3s ease;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: #333;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.toggle-btn i {
+  margin-right: 8px;
+}
+
+.channel-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #ddd;
+  transition: background 0.2s;
+}
+
+.channel-item:hover, .channel-item.active {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.message-area {
+  flex: 1;
+  padding: 20px;
+  background-color: #ffffff;
+}
+
+#channelHeader {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #007bff;
+}
+
+#messageList {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+#messageList li {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+#messageList li div {
+  display: flex;
+  flex-direction: column;
+}
+
+#messageList small {
+  font-size: 12px;
+  color: #666;
+}
+
+.message-input {
+  display: flex;
+  align-items: center;
+}
+
+#messageInput {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-right: 10px;
+  font-size: 14px;
+}
+
+#sendMessageBtn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#sendMessageBtn:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 600px) {
+  .channel-list {
+      width: 100%;
+      border-right: none;
+      border-bottom: 1px solid #ddd;
+  }
+
+  .chat-app {
+      flex-direction: column;
+  }
+
+  .message-area {
+      padding: 15px;
+  }
+}

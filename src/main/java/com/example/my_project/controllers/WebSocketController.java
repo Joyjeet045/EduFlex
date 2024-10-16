@@ -4,12 +4,14 @@ import com.example.my_project.models.Message;
 import com.example.my_project.service.MessageService;
 import com.example.my_project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import java.security.Principal;
+
 
 @Controller
 public class WebSocketController {
@@ -25,11 +27,10 @@ public class WebSocketController {
   }
 
   @MessageMapping("/channel/{channelId}/sendMessage")  
-  public void handleMessage(Long channelId, String content, Principal principal) {
+  public void handleMessage(@DestinationVariable Long channelId,@Payload Message message,Principal principal) {
     Long userId = userService.findUser(principal.getName()).getId();
     boolean isInstructor = userService.isTeacher(principal.getName());
-
-    messageService.sendMessage(channelId, userId, content, isInstructor);
+    messageService.sendMessage(channelId, userId, message.getContent(), isInstructor);
   }
 
 }

@@ -20,6 +20,7 @@
                     <h2 class="course-title" th:text="${course.title}"></h2>
                     <p class="course-description" th:text="${course.description}"></p>
                     <a th:href="@{/course/{id}(id=${course.id})}" class="resume-button">Resume Course</a>
+                    <a th:href="@{/community/chat/{courseId}(courseId=${course.id})}" class="community-button">View Community</a>
                 </div>
             </div>
         </div>

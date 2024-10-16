@@ -7,7 +7,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class MessageService {
@@ -29,11 +29,17 @@ public class MessageService {
     message.setTimestamp(LocalDateTime.now());
 
     messageDao.save(message);
-    messagingTemplate.convertAndSend("/topic/channel"+channelId, message);
+    messagingTemplate.convertAndSend("/topic/channel/"+channelId, message);
   }
 
   public List<Message> getMessagesByChannelId(Long channelId) {
-    return messageDao.findByChannelId(channelId);
+    List<Message> messages = messageDao.findByChannelId(channelId);
+    System.out.println(messages);
+    if (messages == null) {
+      return new ArrayList<>(); 
+    }
+    return messages;
+
   }
 
 }
