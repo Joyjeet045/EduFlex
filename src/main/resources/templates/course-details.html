@@ -60,6 +60,9 @@
                     </span>
                 </li>
             </ul>
+            <div class="add-lecture-section">
+                <a th:href="@{/course/{courseId}/lecture/add(courseId=${course.id})}" class="add-lecture-button">Add Lecture</a>
+            </div>
             <div class="enroll-section" th:if="${#lists.size(enrolled) < course.maxParticipants}">
                 <form th:action="@{/course/{courseId}/enroll(courseId=${course.id})}" method="post">
                     <button type="submit" class="enroll-button">Enroll Now</button>

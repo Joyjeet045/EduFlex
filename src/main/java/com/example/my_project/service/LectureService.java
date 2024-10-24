@@ -25,4 +25,7 @@ public class LectureService {
         return lectureDao.findByIdAndCourseId(lectureId, courseId);
     }
 
-}
+    public void saveLecture(Lecture lecture){
+        lectureDao.saveLecture(lecture);
+    }
+}   

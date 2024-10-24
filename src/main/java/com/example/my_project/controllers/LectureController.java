@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import java.security.Principal;
 import org.springframework.http.ResponseEntity;
+import java.time.Duration;
 
 @Controller
 @RequestMapping("/course") 
@@ -44,7 +45,6 @@ public class LectureController {
       }
       model.addAttribute("comments", comments);
       model.addAttribute("userNames", userNames); 
-
       Course course = courseService.findCourseById(courseId);
       model.addAttribute("course", course); 
       return "lecture-details";
@@ -54,7 +54,6 @@ public class LectureController {
     public String addComment(@PathVariable Long courseId, @PathVariable Long lectureId, @ModelAttribute Comment comment, Principal principal) {
       User currentUser = userService.findUser(principal.getName());
       System.out.println("Current User: " + currentUser);
-
       if (currentUser !=null) {
         comment.setUserId(currentUser.getId());
         comment.setLectureId(lectureId);
@@ -89,6 +88,21 @@ public class LectureController {
       Map<String, Integer> response = new HashMap<>();
       response.put("dislikes", updatedLikes);        
       return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{courseId}/lecture/add")
+    public String showAddLectureForm(@PathVariable Long courseId, Model model) {
+        model.addAttribute("courseId", courseId);
+        model.addAttribute("lecture", new Lecture()); 
+        return "add-lecture"; 
+    }
+
+    @PostMapping("/{courseId}/lecture/add")
+    public String addLecture(@PathVariable Long courseId, @ModelAttribute Lecture lecture, @RequestParam("durationInMinutes") int durationInMinutes) {
+        lecture.setCourseId(courseId); 
+        lecture.setDuration(Duration.ofMinutes(durationInMinutes));        
+        lectureService.saveLecture(lecture); 
+        return "redirect:/course/" + courseId; 
     }
 
     @PostMapping("/{courseId}/lecture/{lectureId}/comments/{commentId}/delete")
