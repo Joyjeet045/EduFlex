@@ -144,3 +144,46 @@ h1 {
 .add-course-btn:hover {
   background-color: #218838; /* Darker green on hover */
 }
+.dashboard-btn-container {
+  display: flex; /* Use flexbox to align items inline */
+  align-items: center; /* Center items vertically */
+  gap: 15px; /* Space between buttons */
+}
+
+.book-icon {
+  font-size: 18px; /* Adjust icon size */
+  text-decoration: none; /* Remove underline from the link */
+  color: #007bff; /* Change link color */
+  display: inline-flex; /* Align icon and text */
+  align-items: center; /* Center items vertically */
+}
+
+.book-icon i {
+  margin-right: 5px; /* Space between icon and text */
+}
+
+.book-icon:hover {
+  color: #0056b3; /* Change color on hover */
+}
+
+.button {
+  display: inline-flex; /* Align icon and text */
+  align-items: center; /* Center items vertically */
+  padding: 10px 15px; /* Add padding */
+  margin: 0 5px; /* Add margin for spacing */
+  background-color: #007bff; /* Primary button color */
+  color: white; /* Text color */
+  text-decoration: none; /* Remove underline from link */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 16px; /* Font size */
+  transition: background-color 0.3s; /* Smooth background color transition */
+}
+
+.button i {
+  margin-right: 5px; /* Space between icon and text */
+}
+
+.button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+}

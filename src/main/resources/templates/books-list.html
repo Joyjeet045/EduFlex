@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/books-list.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Books Available in Library</h1>
+        <div class="text-right mb-3">
+            <a href="/books/add" class="btn btn-primary">Add New Book</a>
+        </div>
+        <ul class="list-group">
+            <li th:each="book : ${books}" class="list-group-item d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <img th:src="${book.thumbnail}" alt="Book Thumbnail" class="img-thumbnail" style="width: 60px; height: 90px; margin-right: 15px;">
+                    <div>
+                        <strong th:text="${book.title}">Book Title</strong><br>
+                        <small th:text="${book.author}">Author</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <span th:text="${book.availableCopies} + ' copies still left'">2 copies still left</span>
+                    <form action="#" th:action="@{/books/issue/{id}(id=${book.id})}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-success btn-sm ml-3">Issue Book</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

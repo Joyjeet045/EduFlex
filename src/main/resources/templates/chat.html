@@ -11,55 +11,50 @@
 
 </head>
 <body>
-  <div class="chat-app">
-    <div class="channel-list" id="channelList">
-      <button class="toggle-btn" id="toggleBtn">
-          <i class="fas fa-chevron-right"></i> Channels
-      </button>
-      <ul id="channelItems">
-          <li th:each="channel : ${channels}" 
-              class="channel-item" 
-              th:data-id="${channel.id}" 
-              th:onclick="'selectChannel(this, ' + ${channel.id} + ')'">
-              #<span th:text="${channel.name}"></span>
-          </li>
-      </ul>
-  </div>
-    <div class="message-area">
-      <h2 id="channelHeader">Please select a channel to view messages.</h2>
-      <ul id="messageList"></ul>
-      <div class="message-input">
-        <input type="text" id="messageInput" placeholder="Type your message..." />
-        <button id="sendMessageBtn" onclick="sendMessage()">Send</button>
-      </div>
+    <div class="chat-app">
+        <div class="channel-list" id="channelList">
+        <button class="toggle-btn" id="toggleBtn">
+            <i class="fas fa-chevron-right"></i> Channels
+        </button>
+        <ul id="channelItems">
+            <li th:each="channel : ${channels}" 
+                class="channel-item" 
+                th:data-id="${channel.id}" 
+                th:onclick="'selectChannel(this, ' + ${channel.id} + ')'">
+                #<span th:text="${channel.name}"></span>
+            </li>
+        </ul>
     </div>
-  </div>
+        <div class="message-area">
+        <h2 id="channelHeader">Please select a channel to view messages.</h2>
+        <ul id="messageList"></ul>
+        <div class="message-input">
+            <input type="text" id="messageInput" placeholder="Type your message..." />
+            <button id="sendMessageBtn" onclick="sendMessage()">Send</button>
+        </div>
+        </div>
+    </div>
 
 <script>
     let stompClient = null;
     let currentChannelId = null;
-    let currentSubscription = null;  // Add this to track current subscription
+    let currentSubscription = null;  
 
-    // Connect WebSocket once when page loads
     function connectWebSocket() {
         const socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function(frame) {
             console.log('Connected: ' + frame);
-            // If there's a channel selected, subscribe to it
             if (currentChannelId) {
                 subscribeToChannel(currentChannelId);
             }
         }, function(error) {
             console.error('STOMP error:', error);
-            // Attempt to reconnect after a delay
             setTimeout(connectWebSocket, 5000);
         });
     }
 
-  // Separate subscription function
     function subscribeToChannel(channelId) {
-        // Unsubscribe from previous channel if any
         if (currentSubscription) {
             currentSubscription.unsubscribe();
         }
@@ -76,7 +71,6 @@
         element.classList.add('active');
         currentChannelId = channelId;
         
-        // Fetch existing messages
         fetch('/api/messages/' + channelId)
             .then(response => {
                 if (!response.ok) {

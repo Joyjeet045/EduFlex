@@ -12,7 +12,13 @@
         <div class="user-info">
             <p th:if="${username}" class="greeting">Welcome, <span th:text="${username}"></span>!</p>
             <div class="dashboard-btn-container">
-                <a th:href="@{/dashboard}" class="dashboard-btn"><i class="fas fa-tachometer-alt"></i> Go to Dashboard</a>
+                <a th:href="@{/dashboard}" class="button dashboard-btn">
+                    <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+                </a>
+                <a th:href="@{/books}" class="button book-icon">
+                    <i class="fas fa-book"></i>
+                    <span>Digital Library</span>
+                </a>
             </div>
         </div>
 

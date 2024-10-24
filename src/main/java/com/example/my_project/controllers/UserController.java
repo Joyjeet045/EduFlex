@@ -66,7 +66,6 @@ public class UserController {
             BindingResult bindingResult,
             @RequestParam("password1") String password1,
             @RequestParam("password2") String password2,
-            // @RequestParam("profilePicture") MultipartFile profilePicture,
             Model model) {
 
         Map<String, String> errors = new HashMap<>();
@@ -88,9 +87,6 @@ public class UserController {
         user.setPassword(password1);
         user.setJoinDate(LocalDate.now());
 
-        // if (!handleProfilePictureUpload(profilePicture, user, errors, model)) {
-        //     return "register"; 
-        // }
         if (!registerNewUser(user, model)) {
             return "register";
         }
@@ -106,14 +102,6 @@ public class UserController {
         
         if (!password1.equals(password2)) {
             errors.put("password", "Passwords do not match");
-        }
-
-        // if (profilePicture.isEmpty()) {
-        //     errors.put("profilePicture", "Please select a profile picture");
-        // }
-
-        if (user.getRole() == null) {
-            errors.put("role", "Role is required");
         }
     }
 

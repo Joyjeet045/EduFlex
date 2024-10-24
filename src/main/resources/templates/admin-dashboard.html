@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/admin-dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome for icons -->
+</head>
+<body>
+    <div class="container">
+        
+        <main>
+            <section class="notifications">
+                <h2>Pending Notifications</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Book ID</th>
+                            <th>User ID</th>
+                            <th>Message</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="notification : ${pendingNotifications}">
+                            <td th:text="${notification.bookId}"></td>
+                            <td th:text="${notification.userId}"></td>
+                            <td th:text="${notification.message}"></td>
+                            <td>
+                                <form th:action="@{/notifications/approve/{id}(id=${notification.id})}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-success">Approve</button>
+                                </form>
+                                <form th:action="@{/notifications/deny/{id}(id=${notification.id})}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger">Deny</button>
+                                </form>
+                            </td>
+                            
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(pendingNotifications)}">
+                            <td colspan="5">No pending notifications.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
