@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.time.Duration;
 
 @Repository
 public class LectureDao {
@@ -18,19 +17,7 @@ public class LectureDao {
     public LectureDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-    public void saveLecture(Lecture lecture) {
-        final String insertSql = "INSERT INTO lectures (course_id, title, video_url, duration, thumbnail) VALUES (?, ?, ?, ?, ?)";
-        
-        String durationAsString = formatDuration(lecture.getDuration());
 
-        jdbcTemplate.update(insertSql,
-            lecture.getCourseId(),
-            lecture.getTitle(),
-            lecture.getVideoUrl(),
-            durationAsString,
-            lecture.getThumbnail()
-        );
-    }
     private boolean isInstructor(Long courseId, Long instructorId) {
         String sql = "SELECT COUNT(*) FROM courses WHERE id = ? AND instructor_id = ?";
         int count = jdbcTemplate.queryForObject(sql, Integer.class, courseId, instructorId);
@@ -90,12 +77,5 @@ public class LectureDao {
             System.out.println("Error fetching lecture: " + e.getMessage());
             throw new RuntimeException("Error fetching lecture", e);
         }
-    }
-
-    private String formatDuration(Duration duration) {
-        long hours = duration.toHours();
-        long minutes = duration.toMinutes() % 60;
-        long seconds = duration.getSeconds() % 60;
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 }

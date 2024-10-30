@@ -48,16 +48,11 @@ public class CourseController {
     }
 
     @GetMapping("/course/{id}")
-    public String viewCourse(@PathVariable("id") Long id, Model model,Principal principal) {
+    public String viewCourse(@PathVariable("id") Long id, Model model) {
         Course course = courseService.findCourseById(id); 
-        System.out.println(course);
         if (course == null) {
             throw new RuntimeException("Course not found with id: " + id);
         }
-        // String username = principal.getName();
-        // User currentUser = userService.findUser(username);  
-        // boolean isInstructor = course.getInstructor().equals(currentUser.getId());
-
         List<Enrollment> enrollments = enrollmentService.getEnrollmentsByCourse(id);
         List<Long> learnerIds = enrollments.stream()
                                     .map(Enrollment::getLearnerId)
@@ -66,7 +61,6 @@ public class CourseController {
         model.addAttribute("enrolled",learnerIds);
         List<Lecture> lectures = lectureService.getLecturesByCourseId(id);
         model.addAttribute("lectures", lectures);
-        // model.addAttribute("isInstructor", isInstructor);
         return "course-details";
     }
 
