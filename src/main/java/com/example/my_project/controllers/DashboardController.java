@@ -22,15 +22,17 @@ public class DashboardController {
     private final NotificationService notificationService;
     private final BookService bookService;
     private final IssueService issueService;
+    private final BookRequestService bookRequestService;
 
     @Autowired
-    public DashboardController(EnrollmentService enrollmentService, CourseService courseService,UserService userService, NotificationService notificationService,BookService bookService,IssueService issueService) {
+    public DashboardController(EnrollmentService enrollmentService, CourseService courseService,UserService userService, NotificationService notificationService,BookService bookService,IssueService issueService,BookRequestService bookRequestService) {
         this.enrollmentService = enrollmentService;
         this.courseService = courseService;
         this.userService= userService;
         this.notificationService = notificationService;
         this.bookService=bookService;
         this.issueService=issueService;
+        this.bookRequestService = bookRequestService;
     }
 
     @GetMapping("/dashboard")
@@ -38,9 +40,16 @@ public class DashboardController {
         User user =userService.findUser(principal.getName());
         Long userId=user.getId();
         String role=user.getRole().name();
+
+        List<BookRequest> allRequests = bookRequestService.getAllRequests(); 
+        List<BookRequest> pendingRequests = allRequests.stream()  
+        .filter(request -> request.getStatus() == RequestStatus.PENDING)
+        .collect(Collectors.toList());
+
         if ("ADMIN".equalsIgnoreCase(role)) {
             List<Notification> pendingNotifications = notificationService.getPendingNotifications(); 
             model.addAttribute("pendingNotifications", pendingNotifications); 
+            model.addAttribute("pendingRequests", pendingRequests);
             return "admin-dashboard"; 
         }
         List<Enrollment> enrollments = enrollmentService.getEnrollmentsByUser(userId);
@@ -55,7 +64,6 @@ public class DashboardController {
                 issue
             ))
             .collect(Collectors.toList());
-
         model.addAttribute("issuedBooks", issuedBookDetails);
         model.addAttribute("enrolledCourses", enrolledCourses);
         return "dashboard";

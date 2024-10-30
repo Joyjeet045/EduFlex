@@ -9,7 +9,6 @@
 </head>
 <body>
     <div class="container">
-        
         <main>
             <section class="notifications">
                 <h2>Pending Notifications</h2>
@@ -35,10 +34,45 @@
                                     <button type="submit" class="btn btn-danger">Deny</button>
                                 </form>
                             </td>
-                            
                         </tr>
                         <tr th:if="${#lists.isEmpty(pendingNotifications)}">
-                            <td colspan="5">No pending notifications.</td>
+                            <td colspan="4">No pending notifications.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="pending-requests">
+                <h2>Pending Book Requests</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Request ID</th>
+                            <th>User Book ID</th>
+                            <th>Requested Copies</th>
+                            <th>Status</th>
+                            <th>Request Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="request : ${pendingRequests}">
+                            <td th:text="${request.id}"></td>
+                            <td th:text="${request.userBookId}"></td>
+                            <td th:text="${request.requestedCopies}"></td>
+                            <td th:text="${request.status}"></td>
+                            <td th:text="${request.requestDate}"></td>
+                            <td>
+                                <form th:action="@{/requests/approve/{id}(id=${request.id})}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-success">Approve</button>
+                                </form>
+                                <form th:action="@{/requests/deny/{id}(id=${request.id})}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger">Deny</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(pendingRequests)}">
+                            <td colspan="6">No pending book requests.</td>
                         </tr>
                     </tbody>
                 </table>

@@ -10,27 +10,42 @@
 <body>
     <div class="container mt-5">
         <h1 class="text-center">Books Available in Library</h1>
-        <div class="text-right mb-3">
+        <div class="text-right mb-3 action-buttons" th:if="${isAdmin}">
+            <a href="/sellers/browse" class="btn btn-info">Browse Sellers</a>
+        </div>
+        <div class="text-right mb-3 action-buttons" th:if="${isSeller}">
             <a href="/books/add" class="btn btn-primary">Add New Book</a>
         </div>
         <ul class="list-group">
             <li th:each="book : ${books}" class="list-group-item d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
-                    <img th:src="${book.thumbnail}" alt="Book Thumbnail" class="img-thumbnail" style="width: 60px; height: 90px; margin-right: 15px;">
+                    <img th:src="${book.book.thumbnail}" alt="Book Thumbnail" class="img-thumbnail" style="width: 60px; height: 90px; margin-right: 15px;">
                     <div>
-                        <strong th:text="${book.title}">Book Title</strong><br>
-                        <small th:text="${book.author}">Author</small>
+                        <strong th:text="${book.book.title}">Book Title</strong><br>
+                        <small th:text="${book.book.author}">Author</small>
                     </div>
                 </div>
                 <div class="d-flex align-items-center">
                     <span th:text="${book.availableCopies} + ' copies still left'">2 copies still left</span>
-                    <form action="#" th:action="@{/books/issue/{id}(id=${book.id})}" method="post" class="d-inline">
-                        <button type="submit" class="btn btn-success btn-sm ml-3">Issue Book</button>
-                    </form>
+                    <div th:if="${isSeller}">
+                        <button type="button" class="btn btn-warning btn-sm ml-3 sell-button" onclick="toggleSellForm(this)">Sell Book</button>        
+                        <form action="#" th:action="@{/books/sell/{id}(id=${book.userBookId})}" method="post" class="sell-form d-none ml-3" >
+                            <input type="number" name="sellCopies" min="1" max="${book.availableCopies}" required class="form-control form-control-sm" style="width: 80px; display: inline;">
+                            <button type="submit" class="btn btn-success btn-sm ml-2">Confirm Sell</button>
+                        </form>
+                    </div>
                 </div>
             </li>
         </ul>
+        
+        
     </div>
+    <script>
+        function toggleSellForm(button) {
+            const form = button.nextElementSibling;
+            form.classList.toggle('d-none'); 
+        }
+    </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

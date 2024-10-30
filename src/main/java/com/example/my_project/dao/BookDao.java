@@ -18,16 +18,17 @@ public class BookDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int saveBook(Book book) {
-        String sql = "INSERT INTO book (title, author, category, copies, available_copies, thumbnail) VALUES (?, ?, ?, ?, ?, ?)";
-        return jdbcTemplate.update(sql,
+    public Book saveBook(Book book) {
+        String sql = "INSERT INTO book (title, author, category, thumbnail) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql,
             book.getTitle(),
             book.getAuthor(),
             book.getCategory(),
-            book.getCopies(),
-            book.getAvailableCopies(),
             book.getThumbnail()
         );
+        Long generatedId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
+        book.setId(generatedId); 
+        return book;
     }
     public List<Book> getAllBooks() {
         String sql = "SELECT * FROM book";
@@ -42,14 +43,5 @@ public class BookDao {
     public int deleteBook(Long id) {
         String sql = "DELETE FROM book WHERE id = ?";
         return jdbcTemplate.update(sql, id);
-    }
-    public int updateAvailableCopies(Long id, int quantityChange) {
-        String sql = "UPDATE book SET available_copies = available_copies + ? WHERE id = ?";
-        return jdbcTemplate.update(sql, quantityChange, id);
-    }
-
-    public int getAvailableCopies(Long id) {
-        String sql = "SELECT available_copies FROM book WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, id);
     }
 }

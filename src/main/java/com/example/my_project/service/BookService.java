@@ -25,25 +25,11 @@ public class BookService {
         return bookDao.findBookById(id);
     }
 
-    public int saveBook(Book book) {
-      book.setAvailableCopies(book.getCopies());
+    public Book saveBook(Book book) {
       return bookDao.saveBook(book);
     }
 
     public int deleteBook(Long id) {
       return bookDao.deleteBook(id);
-    }
-
-    public boolean issueBook(Long id) {
-      Book book = bookDao.findBookById(id);
-      if (book != null && book.getAvailableCopies() > 0) {
-          bookDao.updateAvailableCopies(id, -1); 
-          return true;
-      }
-      return false;
-    }
-
-    public void returnBook(Long id) {
-        bookDao.updateAvailableCopies(id, 1); 
     }
 }

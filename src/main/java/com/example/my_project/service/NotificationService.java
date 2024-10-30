@@ -13,12 +13,14 @@ public class NotificationService {
     private final NotificationDao notificationDao;
     private final IssueService issueService;
     private final BookService bookService;
+    private final UserBookService userBookService;
 
     @Autowired
-    public NotificationService(NotificationDao notificationDao,IssueService issueService,BookService bookService) {
+    public NotificationService(NotificationDao notificationDao,IssueService issueService,BookService bookService,UserBookService userBookService) {
       this.notificationDao = notificationDao;
       this.issueService = issueService;
       this.bookService= bookService;
+      this.userBookService = userBookService;
     }
 
     public void createNotification(Notification notification) {
@@ -41,7 +43,7 @@ public class NotificationService {
           issue.setIssueDate(new Timestamp(System.currentTimeMillis())); 
 
           issueService.createIssue(issue); 
-          bookService.issueBook(notification.getBookId());
+          userBookService.issueBook(notification.getBookId());
         }
     }
 
