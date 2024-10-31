@@ -69,5 +69,8 @@ public class UserBookDao {
         String sql = "SELECT * FROM user_book WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(UserBook.class), Id);
     }
-
+    public List<UserBook> findAll() {
+        String sql = "SELECT * FROM user_book";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(UserBook.class));
+    }
 }

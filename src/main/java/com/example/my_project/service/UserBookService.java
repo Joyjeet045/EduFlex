@@ -6,18 +6,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-
+import java.util.*;
+import java.util.stream.Collectors;
 @Service
 public class UserBookService {
 
     private final UserBookDao userBookDao;
     private final BookRequestDao bookRequestDao;
+    private final BookDao bookDao;
 
-    @Autowired
-    public UserBookService(UserBookDao userBookDao, BookRequestDao bookRequestDao) {
+    public UserBookService(UserBookDao userBookDao, BookRequestDao bookRequestDao, BookDao bookDao) {
         this.userBookDao = userBookDao;
         this.bookRequestDao = bookRequestDao;
+        this.bookDao = bookDao;
     }
 
     public UserBook saveUserBook(UserBook userBook) {
@@ -70,4 +71,21 @@ public class UserBookService {
     public void returnBook(Long id) {
         userBookDao.updateAvailableCopies(id, 1); 
     }
+
+    public List<Book> findAllBooks() {
+        List<Long> bookIds = userBookDao.findAll().stream()
+                .map(UserBook::getBookId)
+                .distinct()
+                .collect(Collectors.toList());
+        return bookIds.stream()
+                .map(bookDao::findBookById)
+                .collect(Collectors.toList());
+    }
+
+    public List<UserBook> findMappingByBookId(Long bookId) {
+        return userBookDao.findAll().stream()
+            .filter(userBook -> userBook.getBookId().equals(bookId) && !userBook.getUserId().equals(24L))
+            .collect(Collectors.toList());
+    }
+
 }

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Browse Sellers - Book List</title>
+    <link rel="stylesheet" th:href="@{/css/browse-sellers.css}">
+</head>
+<body>
+
+    <h1>Available Books</h1>
+
+    <div class="book-list">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>ISBN</th>
+                    <th>Available Copies</th>
+                    <th>Total Copies</th>
+                </tr>
+            </thead>
+            <tbody>
+              <tr th:each="book : ${books}">
+                <td>
+                    <img th:src="@{${book.thumbnail}}" alt="Thumbnail" width="50" height="75" />
+                </td>
+                <td th:text="${book.title}">Book Title</td>
+                <td th:text="${book.author}">Author Name</td>
+                <td th:text="${book.category}">Category</td>
+                <td>
+                  <button class="collapsible">Show Sellers!</button>
+                  <div class="content">
+                      <ul>
+                          <li th:each="userBook : ${bookSellersMap[book.id]}">
+                              User ID: <span th:text="${userBook.userId}">User ID</span>,
+                              Available Copies: <span th:text="${userBook.availableCopies}">Available Copies</span>
+                          </li>
+                      </ul>
+                  </div>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+      document.querySelectorAll(".collapsible").forEach(button => {
+          button.addEventListener("click", function() {
+              this.classList.toggle("active");
+              const content = this.nextElementSibling;
+              if (content.style.display === "block") {
+                  content.style.display = "none";
+              } else {
+                  content.style.display = "block";
+              }
+          });
+      });
+  </script>
+
+</body>
+</html>

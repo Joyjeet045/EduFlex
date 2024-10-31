@@ -1,0 +1,125 @@
+/* Basic reset for body and table */
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 20px;
+  background-color: #f4f4f4;
+}
+
+/* Main title style */
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Container for book list */
+.book-list {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background-color: #007bff;
+  color: #fff;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Thumbnail image style */
+td img {
+  border-radius: 4px;
+}
+
+/* List styling for user books */
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  padding: 5px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+li span {
+  font-weight: bold;
+}
+
+/* Responsive styling */
+@media (max-width: 600px) {
+  table {
+      font-size: 14px;
+  }
+
+  td img {
+      width: 40px;
+      height: 60px;
+  }
+}
+.collapsible {
+  background-color: #f1f1f1;
+  color: #444;
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.active, .collapsible:hover {
+  background-color: #ddd;
+}
+
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Style for list items in collapsible content */
+.content ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.content li {
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.content li:last-child {
+  border-bottom: none; /* Remove border from last item */
+}
