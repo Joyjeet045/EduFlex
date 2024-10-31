@@ -26,12 +26,13 @@
 
         <div class="course-container">
             <div th:each="course : ${courses}" class="course-card">
-                <img th:src="@{/uploads/thumbnails/${course.thumbnail}}" alt="Course Thumbnail" class="course-thumbnail"/>
+                <img th:src="@{${course.thumbnail}}" alt="Course Thumbnail" class="course-thumbnail"/>
                 <div class="course-info">
                     <h2 class="course-title" th:text="${course.title}"></h2>
                     <p class="course-description" th:text="${course.description}"></p>
                     <a th:href="@{/course/{id}(id=${course.id})}" class="action-link view-details-btn">View Details</a>
                 </div>
+            
             </div>
         </div>
 

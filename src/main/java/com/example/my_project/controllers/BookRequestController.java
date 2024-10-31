@@ -59,4 +59,26 @@ public class BookRequestController {
     return "redirect:/books"; 
   }
 
+  @PostMapping("/buy/{id}")
+  public String approveRequest(@PathVariable Long id, @RequestParam("requestedCopies") int requestedCopies) {
+    UserBook userBook = userBookService.findById(id);
+    Long adminId = 24L;
+    UserBook newUserBook = userBookService.findByUserIdAndBookId(adminId, userBook.getBookId());
+
+    if (newUserBook != null) {
+        userBookService.updateAvailableCopies(newUserBook.getId(), requestedCopies);
+        userBookService.updateTotalCopies(newUserBook.getId(), requestedCopies);
+    } else {
+        newUserBook = new UserBook();
+        newUserBook.setUserId(adminId);
+        newUserBook.setBookId(userBook.getBookId());
+        newUserBook.setTotalCopies(requestedCopies);
+        newUserBook.setAvailableCopies(requestedCopies);
+        userBookService.saveUserBook(newUserBook);
+    }
+    
+    userBookService.updateAvailableCopies(userBook.getId(), -requestedCopies);
+    userBookService.updateTotalCopies(userBook.getId(), -requestedCopies);
+    return "redirect:/books";
+  }
 }

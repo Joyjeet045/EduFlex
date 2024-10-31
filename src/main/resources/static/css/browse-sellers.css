@@ -123,3 +123,52 @@ li span {
 .content li:last-child {
   border-bottom: none; /* Remove border from last item */
 }
+
+.quantity-container {
+  margin-top: 10px;
+}
+
+.quantity-container input {
+  width: 50px;
+  padding: 5px;
+  margin-right: 10px;
+}
+
+.buy-button {
+  padding: 5px 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.buy-button:hover {
+  background-color: #45a049;
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+}
+
+.buy-toggle {
+  padding: 8px 15px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  font-size: 14px;
+}
+
+.buy-toggle:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.buy-toggle:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+}

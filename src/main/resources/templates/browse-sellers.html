@@ -21,7 +21,7 @@
                 </tr>
             </thead>
             <tbody>
-              <tr th:each="book : ${books}">
+                <tr th:each="book : ${books}">
                 <td>
                     <img th:src="@{${book.thumbnail}}" alt="Thumbnail" width="50" height="75" />
                 </td>
@@ -29,16 +29,26 @@
                 <td th:text="${book.author}">Author Name</td>
                 <td th:text="${book.category}">Category</td>
                 <td>
-                  <button class="collapsible">Show Sellers!</button>
-                  <div class="content">
-                      <ul>
-                          <li th:each="userBook : ${bookSellersMap[book.id]}">
-                              User ID: <span th:text="${userBook.userId}">User ID</span>,
-                              Available Copies: <span th:text="${userBook.availableCopies}">Available Copies</span>
-                          </li>
-                      </ul>
-                  </div>
-
+                    <button class="collapsible">Show Sellers!</button>
+                    <div class="content">
+                        <ul>
+                            <li th:each="userBook : ${bookSellersMap[book.id]}">
+                            User ID: <span th:text="${userBook.userId}">User ID</span>,
+                            Available Copies: <span th:text="${userBook.availableCopies}">Available Copies</span>
+                            <div class="quantity-container">
+                                <button class="buy-toggle">Buy Book</button>
+                                <div class="buy-quantity" style="display: none;">
+                                    <form th:action="@{/requests/buy/{id}(id=${userBook.id})}" method="post">
+                                        <input type="number" name="requestedCopies" min="1" th:max="${userBook.availableCopies}" class="quantity-input" value="1">
+                                        <button type="submit" class="buy-button">Buy</button>
+                                    </form>                            
+                                    <span class="error" style="display: none;"></span>
+                                </div>
+                            </div>
+                            
+                        </li>
+                        </ul>
+                    </div>
                 </td>
             </tr>
             </tbody>
@@ -56,6 +66,31 @@
               }
           });
       });
+
+      document.querySelectorAll(".buy-toggle").forEach(button => {
+            button.addEventListener("click", function() {
+                const buyQuantityDiv = this.parentElement.querySelector(".buy-quantity");
+                buyQuantityDiv.style.display = buyQuantityDiv.style.display === "block" ? "none" : "block";
+            });
+        });
+
+        document.querySelectorAll(".buy-button").forEach(button => {
+            button.addEventListener("click", function() {
+                const quantityInput = this.parentElement.querySelector(".quantity-input");
+                const availableCopies = parseInt(quantityInput.getAttribute('max'), 10);
+                const quantity = parseInt(quantityInput.value, 10);
+                const errorSpan = this.parentElement.querySelector(".error");
+
+                if (quantity <= 0 || quantity > availableCopies) {
+                    errorSpan.textContent = "Please enter a valid quantity (1 to " + availableCopies + ").";
+                    errorSpan.style.display = "block";
+                } else {
+                    errorSpan.style.display = "none";
+                    alert("You have bought " + quantity + " copies from User ID: " + this.getAttribute('data-user-id') + ".");
+                }
+            });
+        });
+
   </script>
 
 </body>

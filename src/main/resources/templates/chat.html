@@ -26,19 +26,24 @@
         </ul>
     </div>
         <div class="message-area">
-        <h2 id="channelHeader">Please select a channel to view messages.</h2>
-        <ul id="messageList"></ul>
-        <div class="message-input">
-            <input type="text" id="messageInput" placeholder="Type your message..." />
-            <button id="sendMessageBtn" onclick="sendMessage()">Send</button>
-        </div>
+            <h2 id="channelHeader">Please select a channel to view messages.</h2>
+            <div class="recommended-books" id="recommendedBooks">
+                <h3>Recommended Books</h3>
+                <ul id="bookList"></ul>
+            </div>
+            <ul id="messageList"></ul>
+            <div class="message-input">
+                <input type="text" id="messageInput" placeholder="Type your message..." />
+                <button id="sendMessageBtn" onclick="sendMessage()">Send</button>
+            </div>
         </div>
     </div>
-
+    
 <script>
     let stompClient = null;
     let currentChannelId = null;
     let currentSubscription = null;  
+    const courseId = [[${courseId}]];
 
     function connectWebSocket() {
         const socket = new SockJS('/ws');
@@ -89,14 +94,50 @@
                     displayMessage(msg);
                 });
 
-                // Subscribe to new channel if WebSocket is connected
                 if (stompClient && stompClient.connected) {
                     subscribeToChannel(channelId);
                 }
+                if (data.channel.name === "general" && courseId) {
+                    fetchRecommendedBooks(courseId);
+                    document.getElementById('recommendedBooks').style.display = 'block';
+                } else {
+
+                    document.getElementById('recommendedBooks').style.display = 'none';
+                }
+
             })
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
             });
+    }
+    function fetchRecommendedBooks(courseId) {
+    fetch('/api/courses/' + courseId + '/recommendedBooks')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(books => {
+            let bookList = document.getElementById('bookList');
+            bookList.innerHTML = ''; 
+
+            books.forEach(book => {
+                let bookItem = document.createElement('li');
+                bookItem.innerHTML = `
+                    <img src="${book.thumbnail}" alt="${book.title}" class="book-thumbnail">
+                    <div class="book-info">
+                        <h4>${book.title}</h4>
+                        <p>by ${book.author}</p>
+                        <p>${book.notes}</p>
+                    </div>
+                `;
+                bookList.appendChild(bookItem);
+            });
+        })
+        .catch(error => {
+            console.error('There was a problem fetching recommended books:', error);
+        });
     }
 
   function displayMessage(message) {
@@ -117,7 +158,6 @@
               `;
               messageItem.appendChild(messageContent);
               messageList.appendChild(messageItem);
-              // Auto scroll to bottom
               messageList.scrollTop = messageList.scrollHeight;
           })
           .catch(error => {
