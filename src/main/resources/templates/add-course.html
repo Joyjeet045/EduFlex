@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1>Add Course</h1>
-    <form action="#" th:action="@{/courses/add}" th:object="${course}" method="post" enctype="multipart/form-data"> <!-- Include enctype for file uploads -->
+    <form action="#" th:action="@{/courses/add}" th:object="${course}" method="post"> <!-- Removed enctype for file uploads -->
         <div>
             <label for="title">Title:</label>
             <input type="text" th:field="*{title}" required />
@@ -50,8 +50,8 @@
         </div>
 
         <div>
-            <label for="thumbnail">Thumbnail:</label>
-            <input type="file" id="thumbnail" name="thumbnail" accept="image/*" required /> 
+            <label for="thumbnail">Thumbnail URL:</label>
+            <input type="url" th:field="*{thumbnail}" placeholder="https://example.com/image.jpg" required /> 
             <div th:if="${#fields.hasErrors('thumbnail')}" th:errors="*{thumbnail}" style="color: red;"></div>
         </div>
 

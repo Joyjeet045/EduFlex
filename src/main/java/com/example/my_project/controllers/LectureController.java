@@ -2,12 +2,17 @@ package com.example.my_project.controllers;
 
 import com.example.my_project.models.*;
 import com.example.my_project.service.*; 
+import com.example.my_project.dao.*; 
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import java.security.Principal;
 import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
+import java.time.Duration;
 
 @Controller
 @RequestMapping("/course") 
@@ -16,12 +21,14 @@ public class LectureController {
     private final CommentService commentService; 
     private final CourseService courseService; 
     private final UserService userService; 
+    private final UserProgressDao userProgressDao;
 
-    public LectureController(LectureService lectureService, CommentService commentService,CourseService courseService,UserService userService) {
+    public LectureController(LectureService lectureService, CommentService commentService,CourseService courseService,UserService userService,UserProgressDao userProgressDao) {
       this.lectureService = lectureService;
       this.commentService = commentService;
       this.courseService = courseService;
       this.userService= userService;
+      this.userProgressDao=userProgressDao;
     }
 
     @GetMapping("/{courseId}/lecture/{lectureId}")
@@ -96,4 +103,35 @@ public class LectureController {
         commentService.deleteComment(commentId);
         return "redirect:/course/" + courseId + "/lecture/" + lectureId; 
     }
+    @PostMapping("/{courseId}/lecture/{lectureId}/markAsDone")
+    public String markLectureAsDone(@PathVariable Long courseId,
+                                    @PathVariable Long lectureId,Principal principal) {
+        Long userId=userService.findUser(principal.getName()).getId();
+        userProgressDao.saveOrUpdateProgress(userId, lectureId, true);
+        return "redirect:/course/" + courseId;
+    }
+
+    @GetMapping("/{courseId}/lecture/add")
+    public String showAddLectureForm(@PathVariable Long courseId, Model model) {
+      Course course = courseService.findCourseById(courseId);
+      model.addAttribute("course", course);
+      model.addAttribute("lecture", new Lecture());
+      return "add-lecture"; 
+    }
+    @PostMapping("/{courseId}/lecture/add")
+    public String addLecture(@PathVariable Long courseId, 
+                             @Valid @ModelAttribute Lecture lecture, 
+                             BindingResult bindingResult, 
+                             Long durationInMinutes) {
+        if (bindingResult.hasErrors()) {
+            return "/course//{courseId}lecture/add";
+        }
+
+        lecture.setDuration(Duration.ofMinutes(durationInMinutes));
+        lecture.setCourseId(courseId);
+        lectureService.saveLecture(lecture);
+
+        return "redirect:/course/" + courseId; 
+    }
+
 }

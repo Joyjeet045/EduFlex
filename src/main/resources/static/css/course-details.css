@@ -1,136 +1,160 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f9f9f9; /* Light background for contrast */
-}
-
+/* Course Details Container */
 .course-details {
-  max-width: 800px;
-  margin: 20px auto; /* Centering the content */
+  max-width: 800px; /* Set a maximum width for the course details */
+  margin: 0 auto; /* Center the container */
   padding: 20px;
-  background-color: #ffffff; /* White background for content */
+  background-color: #fff; /* White background for clarity */
   border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
-h1 {
-  font-size: 2.5em; /* Main title size */
-  color: #333; /* Darker text for contrast */
-  margin-bottom: 15px; /* Space below title */
-}
-
+/* Course Thumbnail */
 .thumbnail-container {
-  text-align: center; /* Center thumbnail */
-  margin-bottom: 20px; /* Space below thumbnail */
+  text-align: center; /* Center the thumbnail */
+  margin-bottom: 20px; /* Space below the thumbnail */
 }
 
 .course-thumbnail {
-  max-width: 100%; /* Responsive thumbnail */
-  height: auto; /* Maintain aspect ratio */
-  border-radius: 5px; /* Slightly rounded corners */
+  max-width: 100%; /* Responsive image */
+  height: auto;
+  border-radius: 8px; /* Rounded corners for the image */
 }
 
+/* Course Info */
 .course-info {
-  padding: 15px; /* Padding for course info */
-  border-top: 1px solid #ddd; /* Top border for separation */
+  margin-top: 20px; /* Space above the course info */
 }
 
+/* Progress Bar Container */
+.progress-container {
+  width: 100%; /* Full width of the parent container */
+  background-color: #f3f3f3; /* Light grey background */
+  border-radius: 20px; /* Rounded corners */
+  overflow: hidden; /* Prevent overflow */
+  margin-bottom: 15px; /* Space below the progress bar */
+}
+
+/* Progress Bar */
+.progress-bar {
+  height: 30px; /* Height of the progress bar */
+  background-color: #4caf50; /* Green color for the progress */
+  text-align: center; /* Center text inside the progress bar */
+  line-height: 30px; /* Vertically center text */
+  color: white; /* White text */
+  transition: width 0.5s ease; /* Smooth transition for width change */
+}
+
+/* Additional Info */
 .additional-info p {
-  margin: 8px 0; /* Margin for spacing between lines */
-  font-size: 1.1em; /* Slightly larger text for details */
+  margin: 5px 0; /* Space between additional info lines */
 }
 
+/* Instructor Info */
 .instructor-info {
-  margin-top: 20px; /* Space above instructor info */
-  padding: 15px;
-  border-top: 1px solid #ddd; /* Top border for separation */
+  margin-top: 30px; /* Space above instructor section */
 }
 
 .instructor-details {
-  display: flex; /* Flexbox for side-by-side layout */
+  display: flex; /* Flexbox for layout */
   align-items: center; /* Center items vertically */
-  margin-top: 10px; /* Space above instructor details */
 }
 
 .instructor-picture {
-  width: 50px; /* Fixed width for instructor picture */
-  height: 50px; /* Fixed height for instructor picture */
-  border-radius: 50%; /* Circular image */
-  margin-right: 15px; /* Space to the right of the image */
+  width: 50px; /* Fixed width for the instructor picture */
+  height: 50px; /* Fixed height for the instructor picture */
+  border-radius: 50%; /* Circle shape */
+  margin-right: 15px; /* Space between image and text */
 }
 
-.instructor-text h3 {
-  margin: 0; /* Remove margin from heading */
-  font-size: 1.5em; /* Instructor name size */
-  color: #007bff; /* Primary color for links */
-}
-
-.instructor-text h3 a {
-  text-decoration: none; /* Remove underline from link */
-  color: inherit; /* Inherit color from h3 */
-}
-
-.instructor-text h3 a:hover {
-  text-decoration: underline; /* Underline on hover for links */
-}
-
+/* Lecture List */
 h3 {
-  font-size: 1.8em; /* Subsection title size */
-  margin-top: 20px; /* Space above subsection titles */
-  color: #333; /* Darker text for contrast */
+  margin-top: 30px; /* Space above section headings */
 }
 
 ul {
-  list-style-type: none; /* Remove bullet points */
+  list-style-type: none; /* Remove default list styling */
   padding: 0; /* Remove padding */
 }
 
-ul li {
-  margin: 10px 0; /* Space between lecture items */
-  font-size: 1.1em; /* Slightly larger text */
+li {
+  margin-bottom: 10px; /* Space between list items */
+  display: flex; /* Flexbox for layout */
+  justify-content: space-between; /* Space between lecture title and button */
+  align-items: center; /* Center items vertically */
 }
 
-ul li a {
-  text-decoration: none; /* Remove underline from lecture links */
-  color: #007bff; /* Primary color for links */
+/* Button Styles */
+.mark-as-done-button {
+  background-color: #007bff; /* Primary button color */
+  color: white; /* White text */
+  border: none; /* No border */
+  padding: 10px 15px; /* Padding inside the button */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s; /* Smooth background color transition */
 }
 
-ul li a:hover {
-  text-decoration: underline; /* Underline on hover for links */
+.mark-as-done-button:hover {
+  background-color: #0056b3; /* Darker color on hover */
 }
 
-@media (max-width: 600px) {
-  .instructor-details {
-      flex-direction: column; /* Stack instructor image and text on smaller screens */
-      align-items: flex-start; /* Align to the start */
-  }
-
-  .instructor-picture {
-      margin-bottom: 10px; /* Space below image on smaller screens */
-  }
-}
-
-
-/* Enroll Button Styles */
 .enroll-section {
-  text-align: center;
-  margin-top: 30px;
+  margin-top: 20px; /* Space above enrollment section */
+  text-align: center; /* Center the entire enroll section */
 }
 
 .enroll-button {
-  background-color: #007bff;
-  color: white;
-  padding: 12px 24px;
-  text-decoration: none;
-  font-size: 1.2em;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-  display: inline-block;
+  background-color: #28a745; /* Green color for the enroll button */
+  color: white; /* White text */
+  border: none; /* No border */
+  padding: 12px 25px; /* Slightly larger padding for a more prominent button */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s; /* Smooth background color transition */
+  font-size: 16px; /* Adjust font size as needed */
 }
 
 .enroll-button:hover {
-  background-color: #0056b3;
-  color: #fff;
+  background-color: #218838; /* Darker green on hover */
 }
 
+/* Full Enrollment Message */
+p[style*="color: red"] {
+  font-weight: bold; /* Bold text for emphasis */
+}
+
+/* Styling for the Add Lecture section */
+.add-lecture-section {
+  background-color: #f9f9f9; /* Light background for the section */
+  border: 1px solid #ddd; /* Subtle border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 20px; /* Spacing inside the section */
+  margin-top: 20px; /* Space above the section */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+}
+
+.add-lecture-section h3 {
+  font-size: 22px; /* Title size */
+  color: #333; /* Dark text color */
+  margin-bottom: 15px; /* Space below the title */
+}
+
+.add-lecture-button {
+  background-color: #007bff; /* Blue background for the button */
+  color: white; /* White text */
+  padding: 10px 20px; /* Padding around the text */
+  border: none; /* No border */
+  border-radius: 4px; /* Rounded corners for the button */
+  font-size: 16px; /* Button text size */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s; /* Smooth transition for background color */
+}
+
+.add-lecture-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.add-lecture-button:focus {
+  outline: none; /* Remove default outline on focus */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Focus effect */
+}

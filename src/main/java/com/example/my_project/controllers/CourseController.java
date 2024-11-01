@@ -2,6 +2,7 @@ package com.example.my_project.controllers;
 
 import com.example.my_project.models.*;
 import com.example.my_project.service.*;
+import com.example.my_project.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,8 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.security.Principal;
 
 @Controller
@@ -28,28 +28,41 @@ public class CourseController {
     private final UserService userService;
     private final LectureService lectureService;
     private final EnrollmentService enrollmentService;
+    private final UserProgressDao userProgressDao;
 
     private final Logger logger = LoggerFactory.getLogger(CourseController.class);
 
     @Autowired
-    public CourseController(CourseService courseService, UserService userService, LectureService lectureService,EnrollmentService enrollmentService) {
+    public CourseController(CourseService courseService, UserService userService, LectureService lectureService,EnrollmentService enrollmentService,UserProgressDao userProgressDao) {
         this.courseService = courseService;
         this.userService = userService;
         this.lectureService = lectureService;
         this.enrollmentService=enrollmentService;
+        this.userProgressDao=userProgressDao;
     }
 
     @GetMapping("/courses")
     public String getAllCourses(Model model,Principal principal) {
         String username = principal.getName();
+        Map<Long, Integer> courseLectureCounts = new HashMap<>();
+        List<Course> courses = courseService.findAll();
+
+        for (Course course : courses) {
+            int lectureCount = lectureService.getLecturesByCourseId(course.getId()).size();
+            courseLectureCounts.put(course.getId(), lectureCount);
+        }
+    
         model.addAttribute("username", username);
+        model.addAttribute("courseLectureCounts", courseLectureCounts);
         model.addAttribute("courses", courseService.findAll());
         return "course-list";  
     }
 
     @GetMapping("/course/{id}")
-    public String viewCourse(@PathVariable("id") Long id, Model model) {
+    public String viewCourse(@PathVariable("id") Long id, Model model,Principal principal) {
         Course course = courseService.findCourseById(id); 
+        Long userId=userService.findUser(principal.getName()).getId();
+
         if (course == null) {
             throw new RuntimeException("Course not found with id: " + id);
         }
@@ -57,10 +70,22 @@ public class CourseController {
         List<Long> learnerIds = enrollments.stream()
                                     .map(Enrollment::getLearnerId)
                                     .toList();
+        List<Lecture> lectures = lectureService.getLecturesByCourseId(id);
+        Map<Long, Boolean> lectureCompletionStatus = new HashMap<>();
+        for (Lecture lecture : lectures) {
+            boolean isCompleted = userProgressDao.isLectureCompletedByUser(userId, lecture.getId());
+            lectureCompletionStatus.put(lecture.getId(), isCompleted);
+        }
+        boolean isInstructor = course.getInstructor() != null && 
+                        course.getInstructor().equals(userId);
+
+        double courseProgress = calculateCourseProgress(lectures, userId);
+        model.addAttribute("lectureCompletionStatus", lectureCompletionStatus);
         model.addAttribute("course", course);
         model.addAttribute("enrolled",learnerIds);
-        List<Lecture> lectures = lectureService.getLecturesByCourseId(id);
         model.addAttribute("lectures", lectures);
+        model.addAttribute("courseProgress", courseProgress);
+        model.addAttribute("isInstructor", isInstructor);
         return "course-details";
     }
 
@@ -74,34 +99,42 @@ public class CourseController {
 
     @PostMapping("/courses/add")
     public String addCourse(@Valid @ModelAttribute Course course,
-                            @RequestParam("thumbnail") MultipartFile thumbnailFile,
-                            BindingResult result,
-                            Model model,Principal principal) {
+                        @RequestParam("thumbnail") String thumbnailUrl,
+                        BindingResult result,
+                            Model model, Principal principal) {
         if (result.hasErrors()) {
             return "add-course"; 
         }
-        if (thumbnailFile.isEmpty()) {
-            result.rejectValue("thumbnail", "error.thumbnail", "Please select a thumbnail image");
+        
+        if (thumbnailUrl == null || thumbnailUrl.isEmpty()) {
+            result.rejectValue("thumbnail", "error.thumbnail", "Please provide a thumbnail URL");
             return "add-course"; 
         }
-        try {
-            String fileName = UUID.randomUUID().toString() + "_" + thumbnailFile.getOriginalFilename();
-            Path path = Paths.get("uploads/thumbnails/" + fileName);
-            Files.createDirectories(path.getParent());
-            Files.copy(thumbnailFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-            course.setThumbnail(fileName);
-        } catch (IOException e) {
-            logger.error("Error uploading thumbnail", e);
-            result.rejectValue("thumbnail", "error.thumbnail", "Error uploading thumbnail: " + e.getMessage());
-            return "add-course"; 
-        }
+
+        course.setThumbnail(thumbnailUrl);
+
         User currentUser = userService.findUser(principal.getName());
         if (currentUser == null) {
             return "redirect:/login"; 
         }
+
         course.setInstructor(currentUser.getId()); 
         courseService.addCourse(course);
         model.addAttribute("message", "Course added successfully!");
         return "redirect:/courses";
     }
+
+    private double calculateCourseProgress(List<Lecture> lectures, Long userId) {
+        int totalLectures = lectures.size();
+        int completedLectures = 0;
+
+        for (Lecture lecture : lectures) {
+            if (userProgressDao.isLectureCompletedByUser(userId, lecture.getId())) {
+                completedLectures++;
+            }
+        }
+        
+        return (totalLectures > 0) ? (double) completedLectures / totalLectures * 100 : 0;
+    }
 }
+

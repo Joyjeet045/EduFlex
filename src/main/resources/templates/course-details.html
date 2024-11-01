@@ -10,13 +10,18 @@
         
         <div class="thumbnail-container">
             <img th:if="${course.thumbnail != null}" 
-                th:src="@{/uploads/thumbnails/{thumbnail}(thumbnail=${course.thumbnail})}" 
-                alt="Course Thumbnail" 
-                class="course-thumbnail"/>
+                th:src="@{${course.thumbnail}}" alt="Course Thumbnail" class="course-thumbnail"/>
             <p th:if="${course.thumbnail == null}">No thumbnail available</p>
         </div>
         
         <div class="course-info">
+            <h3>Course Progress</h3>
+            <div class="progress-container">
+                <div class="progress-bar" th:style="'width:' + ${courseProgress} + '%'">
+                    <span th:text="${courseProgress} + '%'">0%</span>
+                </div>
+            </div>
+
             <p th:text="${course.description}">Course Description</p>
             <div class="additional-info">
                 <p><strong>Language:</strong> <span th:text="${course.language}">Language</span></p>
@@ -51,15 +56,32 @@
             <ul>
                 <li th:if="${#lists.isEmpty(lectures)}">No lectures available.</li>
                 <li th:each="lecture : ${lectures}" th:if="${!#lists.isEmpty(lectures)}">
+                    <form th:action="@{/course/{courseId}/lecture/{lectureId}/markAsDone(courseId=${course.id}, lectureId=${lecture.id})}" 
+                        method="post" 
+                        class="mark-as-done-form">
+                        <button type="submit" class="mark-as-done-button">
+                            <span th:if="${lectureCompletionStatus[lecture.id]}">Completed</span>
+                            <span th:unless="${lectureCompletionStatus[lecture.id]}">Mark as Done</span>
+                        </button>
+                    </form>
                     <a th:href="@{/course/{c_id}/lecture/{id}(c_id=${course.id}, id=${lecture.id})}" 
                     th:text="${lecture.title}">
                         Lecture Title
                     </a>
-                    <span th:text="${lecture.duration != null ? 
-                        #temporals.format(T(java.time.LocalTime).ofSecondOfDay(lecture.duration.seconds), 'HH:mm:ss') : 'Not specified'}">
-                    </span>
+                    <div style="margin-top: 0.5rem; color: #666; font-size: 0.9rem;">
+                        <span>Time to Complete: </span>
+                        <p>Duration: <span th:text="${lecture.formattedDuration}"></span></p>
+
+                    </div>                
                 </li>
             </ul>
+            <div class="add-lecture-section">
+                <h3>Add Lecture</h3>
+                <form th:action="@{/course/{courseId}/lecture/add(courseId=${course.id})}" method="get">
+                    <button type="submit" class="add-lecture-button">Add Lecture</button>
+                </form>
+            </div>
+
             <div class="enroll-section" th:if="${#lists.size(enrolled) < course.maxParticipants}">
                 <form th:action="@{/course/{courseId}/enroll(courseId=${course.id})}" method="post">
                     <button type="submit" class="enroll-button">Enroll Now</button>
@@ -70,6 +92,7 @@
                 Enrollment is full. You cannot join this course.
             </p>
         </div>
+    </div>
     </div>
 </body>
 </html>

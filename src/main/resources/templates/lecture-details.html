@@ -30,7 +30,7 @@
             <p th:if="${lecture.videoUrl == null}">Sorry, the video is not available at this time.</p>
         </div>      
         <div class="lecture-info">
-            <p><strong>Duration:</strong> <span th:text="${lecture.duration != null ? lecture.duration.toMinutes() + ' minutes' : 'N/A'}"></span></p>
+            <p>Duration: <span th:text="${lecture.formattedDuration}"></span></p>
         </div>
         <div class="comments-section">
             <h3>Comments</h3>

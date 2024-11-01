@@ -27,7 +27,7 @@
     </div>
         <div class="message-area">
             <h2 id="channelHeader">Please select a channel to view messages.</h2>
-            <div class="recommended-books" id="recommendedBooks">
+            <div class="recommended-books" id="recommendedBooks" >
                 <h3>Recommended Books</h3>
                 <ul id="bookList"></ul>
             </div>
@@ -129,7 +129,7 @@
                     <div class="book-info">
                         <h4>${book.title}</h4>
                         <p>by ${book.author}</p>
-                        <p>${book.notes}</p>
+                        <p><b>${book.notes}</b></p>
                     </div>
                 `;
                 bookList.appendChild(bookItem);

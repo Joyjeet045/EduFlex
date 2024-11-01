@@ -10,11 +10,9 @@
 
         <div class="course-container">
             <div th:each="course : ${enrolledCourses}" class="course-card">
+
                 <div th:if="${course.thumbnail != null}">
-                    <img th:src="@{/uploads/thumbnails/${course.thumbnail}}" alt="Course Thumbnail" class="course-thumbnail"/>
-                </div>
-                <div th:if="${course.thumbnail == null}">
-                    <img th:src="@{/uploads/thumbnails/default-thumbnail.png}" alt="Default Thumbnail" class="course-thumbnail"/>
+                    <img th:src="@{${course.thumbnail}}" alt="Course Thumbnail" class="course-thumbnail"/>
                 </div>
                 <div class="course-info">
                     <h2 class="course-title" th:text="${course.title}"></h2>

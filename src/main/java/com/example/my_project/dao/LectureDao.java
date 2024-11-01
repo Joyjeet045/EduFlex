@@ -54,6 +54,21 @@ public class LectureDao {
             throw new RuntimeException("Error updating lecture", e);
         }
     }
+    public int saveLecture(Lecture lecture) {
+        String sql = "INSERT INTO lectures (title, video_url, duration, thumbnail, course_id) VALUES (?, ?, ?, ?, ?)";
+        try {
+            return jdbcTemplate.update(sql,
+                lecture.getTitle(),
+                lecture.getVideoUrl(),
+                lecture.getDuration().toMinutes(),
+                lecture.getThumbnail(),
+                lecture.getCourseId() 
+            );
+        } catch (DataAccessException e) {
+            System.out.println("Error saving lecture: " + e.getMessage());
+            throw new RuntimeException("Error saving lecture", e);
+        }
+    }
 
     public int deleteLecture(Long lectureId, Long courseId, Long instructorId) {
         if (!isInstructor(courseId, instructorId)) {

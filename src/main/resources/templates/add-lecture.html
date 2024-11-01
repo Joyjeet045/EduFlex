@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Lecture</title>
+    <link rel="stylesheet" href="/css/add-lecture.css"> 
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Add a Lecture to Course: <span th:text="${course.title}"></span></h1>
+        </header>
+
+        <div class="add-lecture-section">
+            <h3>Add Lecture</h3>
+            <form th:action="@{/course/{courseId}/lecture/add(courseId=${course.id})}" method="post" th:object="${lecture}">
+                <div class="form-group">
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" th:field="*{title}" required />
+                </div>
+                <div class="form-group">
+                    <label for="videoUrl">Video URL:</label>
+                    <input type="url" id="videoUrl" name="videoUrl" th:field="*{videoUrl}" required />
+                </div>
+                <div class="form-group">
+                  <label for="durationInMinutes">Duration (in minutes):</label>
+                  <input type="number" id="durationInMinutes" name="durationInMinutes" required>
+                </div>
+                <div class="form-group">
+                    <label for="thumbnail">Thumbnail URL:</label>
+                    <input type="url" id="thumbnail" name="thumbnail" th:field="*{thumbnail}" required />
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="add-lecture-button">Add Lecture</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

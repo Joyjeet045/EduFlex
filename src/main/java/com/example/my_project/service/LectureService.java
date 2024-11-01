@@ -24,5 +24,8 @@ public class LectureService {
     public Lecture findLectureById(Long lectureId, Long courseId) {
         return lectureDao.findByIdAndCourseId(lectureId, courseId);
     }
+    public int saveLecture(Lecture lecture) {
+        return lectureDao.saveLecture(lecture);
+    }
 
 }

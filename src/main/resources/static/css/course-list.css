@@ -187,3 +187,19 @@ h1 {
 .button:hover {
   background-color: #0056b3; /* Darker shade on hover */
 }
+
+
+/* Chapters Info */
+.chapters-info {
+  display: flex; /* Flexbox for icon and text alignment */
+  align-items: center; /* Center items vertically */
+  margin-top: 5px; /* Space above chapters info */
+  font-size: 1rem; /* Font size for chapters */
+  color: #999; /* Grey color for chapters */
+}
+
+.chapters-info i {
+  font-size: 1rem; /* Size for the icon */
+  color: #007bff; /* Color for the icon */
+  margin-right: 5px; /* Space between icon and text */
+}
