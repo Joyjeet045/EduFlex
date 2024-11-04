@@ -24,6 +24,28 @@
 
         <hr class="divider"/>
 
+        <form th:action="@{/courses}" method="get" class="filter-form">
+            <input type="text" name="title" placeholder="Search by title..." class="form-control" />
+            
+            <select name="category" class="form-control">
+                <option value="">Select Category</option>
+                <option th:each="category : ${T(com.example.my_project.models.Category).values()}"
+                        th:value="${category}" 
+                        th:text="${category}"></option>
+            </select>
+            
+            <select name="language" class="form-control">
+                <option value="">Select Language</option>
+                <option th:each="language : ${T(com.example.my_project.models.Language).values()}"
+                        th:value="${language}" 
+                        th:text="${language}"></option>
+            </select>
+            
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+
+        <hr class="divider"/>
+
         <div class="course-container">
             <div th:each="course : ${courses}" class="course-card">
                 <img th:src="@{${course.thumbnail}}" alt="Course Thumbnail" class="course-thumbnail"/>

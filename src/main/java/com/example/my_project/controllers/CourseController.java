@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.security.Principal;
+import java.util.stream.Collectors;
 
 @Controller
 public class CourseController {
@@ -42,21 +43,37 @@ public class CourseController {
     }
 
     @GetMapping("/courses")
-    public String getAllCourses(Model model,Principal principal) {
+    public String getAllCourses(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) Category category,
+            @RequestParam(required = false) Language language,
+            Model model, 
+            Principal principal) {
+        
         String username = principal.getName();
         Map<Long, Integer> courseLectureCounts = new HashMap<>();
+
         List<Course> courses = courseService.findAll();
+
+        if (title != null || category != null || language != null) {
+            courses = courses.stream()
+                    .filter(course -> (title == null || course.getTitle().toLowerCase().contains(title.toLowerCase())))
+                    .filter(course -> (category == null || course.getCategory() == category))
+                    .filter(course -> (language == null || course.getLanguage() == language))
+                    .collect(Collectors.toList());
+        }
 
         for (Course course : courses) {
             int lectureCount = lectureService.getLecturesByCourseId(course.getId()).size();
             courseLectureCounts.put(course.getId(), lectureCount);
         }
-    
+
         model.addAttribute("username", username);
         model.addAttribute("courseLectureCounts", courseLectureCounts);
-        model.addAttribute("courses", courseService.findAll());
+        model.addAttribute("courses", courses); 
         return "course-list";  
     }
+
 
     @GetMapping("/course/{id}")
     public String viewCourse(@PathVariable("id") Long id, Model model,Principal principal) {

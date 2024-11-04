@@ -58,18 +58,17 @@ public class UserBookService {
     
     
     public boolean issueBook(Long id) {
-        BookRequest request = bookRequestDao.findById(id);
-        Long Id=request.getUserBookId();
-        UserBook book = userBookDao.findById(Id);
+        UserBook book = userBookDao.findByUserIdAndBookId(24L,id);
         if (book != null && book.getAvailableCopies() > 0) {
-            userBookDao.updateAvailableCopies(Id, -1); 
+            userBookDao.updateAvailableCopies(book.getId(), -1); 
             return true;
         }
         return false;
     }
 
     public void returnBook(Long id) {
-        userBookDao.updateAvailableCopies(id, 1); 
+        UserBook book = userBookDao.findByUserIdAndBookId(24L,id);
+        userBookDao.updateAvailableCopies(book.getId(), 1); 
     }
 
     public List<Book> findAllBooks() {

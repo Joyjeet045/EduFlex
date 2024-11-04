@@ -71,11 +71,71 @@ body {
   color: #333;
 }
 
+/* Assignments Section */
+.assignments {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.assignments h3 {
+  margin-bottom: 10px;
+  font-size: 20px;
+  color: #333;
+}
+
+.assignment-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.assignment-item:last-child {
+  border-bottom: none;
+}
+
+.assignment-title {
+  font-size: 16px;
+  color: #007bff;
+}
+
+.assignment-details {
+  font-size: 14px;
+  color: #555;
+}
+
+/* Announcements Section */
+.announcements {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff3cd; /* Light yellow background for announcements */
+}
+
+.announcements h3 {
+  margin-bottom: 10px;
+  font-size: 20px;
+  color: #856404; /* Darker color for the announcement header */
+}
+
+.announcement-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.announcement-item:last-child {
+  border-bottom: none;
+}
+
 /* Recommended Books Section */
 .recommended-books {
   margin-bottom: 20px;
   padding: 15px;
-  display: none;
+  display: none; /* Change to 'block' when needed */
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #f9f9f9;
@@ -176,4 +236,187 @@ body {
       width: 100%;
       height: auto;
   }
+}
+
+/* Assignments Card Styles */
+.assignment-card {
+  background-color: #ffffff; /* White background for the assignment card */
+  border: 1px solid #ddd; /* Light gray border */
+  border-radius: 8px; /* Rounded corners */
+  padding: 15px; /* Padding around the content */
+  margin-bottom: 15px; /* Space between assignment cards */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.assignment-title {
+  font-size: 18px; /* Font size for the title */
+  color: #007bff; /* Blue color for the title */
+  margin-bottom: 8px; /* Space below the title */
+}
+
+.assignment-description {
+  font-size: 14px; /* Font size for the description */
+  color: #555; /* Dark gray for the description */
+  margin-bottom: 10px; /* Space below the description */
+}
+
+.assignment-details {
+  display: flex; /* Flexbox for aligning due date and max points */
+  justify-content: space-between; /* Space between elements */
+  font-size: 14px; /* Font size for details */
+  color: #333; /* Darker color for better visibility */
+}
+
+.assignment-due-date {
+  font-style: italic; /* Italic style for the due date */
+}
+
+.assignment-max-points {
+  background-color: #e7f0ff; /* Light blue background for max points */
+  padding: 5px 10px; /* Padding around the max points */
+  border-radius: 5px; /* Rounded corners */
+  color: #0056b3; /* Darker blue text for contrast */
+  font-weight: bold; /* Bold text for max points */
+}
+
+
+/* Remove bullets from the assignment list */
+.assignments ul {
+  list-style-type: none; /* Removes the default bullet points */
+  padding: 0; /* Removes padding from the list */
+  margin: 0; /* Removes margin from the list */
+}
+
+/* General styles for the assignment card */
+.assignment-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 10px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles for the assignment title */
+.assignment-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+/* Styles for the assignment description */
+.assignment-description {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+/* Styles for the assignment details */
+.assignment-details {
+  font-size: 12px;
+  margin-bottom: 10px;
+  color: #888;
+}
+
+/* Styles for the file input */
+input[type="file"] {
+  display: none; /* Hide the default file input */
+}
+
+.file-upload-label {
+  display: inline-block;
+  padding: 10px 15px;
+  border: 1px solid #007bff;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-right: 10px; /* Add space between the button and file input */
+}
+
+/* Change color on hover for the file upload button */
+.file-upload-label:hover {
+  background-color: #0056b3;
+}
+
+/* Styles for the submit button */
+.submit-assignment {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Change color on hover for the submit button */
+.submit-assignment:hover {
+  background-color: #218838;
+}
+
+/* Additional styles for mobile responsiveness */
+@media (max-width: 600px) {
+  .assignment-card {
+      padding: 12px;
+  }
+
+  .assignment-title {
+      font-size: 16px;
+  }
+
+  .assignment-details {
+      font-size: 11px;
+  }
+
+  .file-upload-label,
+  .submit-assignment {
+      padding: 8px 12px;
+  }
+}
+
+.view-submissions-button {
+  display: inline-block; /* Makes the link behave like a button */
+  background-color: #007bff; /* Blue background color */
+  color: #ffffff; /* White text color */
+  padding: 10px 15px; /* Padding for the button */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Cursor indicates it's clickable */
+  text-align: center; /* Center text */
+  text-decoration: none; /* No underline on text */
+  font-size: 16px; /* Font size */
+  transition: background-color 0.3s ease; /* Smooth transition for background color */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+.view-submissions-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.view-submissions-button:focus {
+  outline: 2px solid #0056b3; /* Outline on focus for keyboard navigation */
+  outline-offset: 2px; /* Space between outline and button */
+}
+
+/* Optional: Disable link appearance for a disabled state */
+.view-submissions-button:disabled {
+  background-color: #cccccc; /* Grey background */
+  color: #666666; /* Darker grey text */
+  cursor: not-allowed; /* Not allowed cursor */
+}
+
+.assignment-status {
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.status-submitted {
+  color: red;
+}
+
+.status-graded {
+  color: green;
 }

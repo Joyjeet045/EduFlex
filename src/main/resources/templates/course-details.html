@@ -91,6 +91,13 @@
             <p th:if="${course.maxParticipants <= #lists.size(enrolled)}" style="color: red;">
                 Enrollment is full. You cannot join this course.
             </p>
+
+            <div class="create-assignment-section">
+                <h3>Create Assignment</h3>
+                <form th:action="@{/assignments/create/{courseId}(courseId=${course.id})}" method="get">
+                    <button type="submit" class="create-assignment-button">Create Assignment</button>
+                </form>
+            </div>
         </div>
     </div>
     </div>

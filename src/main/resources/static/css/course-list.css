@@ -203,3 +203,58 @@ h1 {
   color: #007bff; /* Color for the icon */
   margin-right: 5px; /* Space between icon and text */
 }
+
+/* Filter Form Styles */
+.filter-form {
+  display: flex; /* Use flexbox for layout */
+  justify-content: space-between; /* Distribute space evenly */
+  align-items: center; /* Center items vertically */
+  margin-bottom: 20px; /* Space below the form */
+}
+
+.form-control {
+  width: 30%; /* Set a width for inputs and selects */
+  padding: 10px; /* Padding for inputs */
+  border: 1px solid #ced4da; /* Border color */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 14px; /* Font size */
+  transition: border-color 0.3s; /* Smooth transition for border */
+}
+
+.form-control:focus {
+  border-color: #007bff; /* Change border color on focus */
+  outline: none; /* Remove outline */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add shadow for focus effect */
+}
+
+button.btn {
+  padding: 10px 20px; /* Padding for button */
+  background-color: #007bff; /* Primary button color */
+  color: white; /* Text color */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 14px; /* Font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s; /* Smooth background color transition */
+}
+
+button.btn:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+}
+
+/* Responsive adjustments for filter form */
+@media (max-width: 768px) {
+  .filter-form {
+    flex-direction: column; /* Stack items on small screens */
+    align-items: stretch; /* Align items to stretch full width */
+  }
+
+  .form-control {
+    width: 100%; /* Full width for inputs and selects on small screens */
+    margin-bottom: 10px; /* Space between stacked items */
+  }
+
+  button.btn {
+    width: 100%; /* Full width for button on small screens */
+  }
+}

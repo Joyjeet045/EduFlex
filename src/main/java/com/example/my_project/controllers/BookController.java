@@ -34,6 +34,9 @@ public class BookController {
     public String listBooks(Model model,Principal principal) {
         User user =userService.findUser(principal.getName()) ;
         Long userId=user.getId();
+        if(user.getRole()!=UserRole.SELLER){
+            userId=24L;
+        }
         List<UserBook> userBooks = userBookService.findAllByUserId(userId);
         List<BookWithAvailability> bookWithAvailabilityList = new ArrayList<>();
         boolean isStudent = user.getRole().equals(UserRole.STUDENT);

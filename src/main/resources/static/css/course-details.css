@@ -158,3 +158,58 @@ p[style*="color: red"] {
   outline: none; /* Remove default outline on focus */
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Focus effect */
 }
+
+.create-assignment-section {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+}
+
+.create-assignment-section h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.create-assignment-section form {
+  display: flex;
+  flex-direction: column;
+}
+
+.create-assignment-section label {
+  margin: 5px 0;
+  font-weight: bold;
+}
+
+.create-assignment-section input[type="text"],
+.create-assignment-section input[type="date"],
+.create-assignment-section input[type="number"],
+.create-assignment-section textarea {
+  padding: 10px;
+  margin: 5px 0 15px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.create-assignment-section button {
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.create-assignment-section button:hover {
+  background-color: #45a049;
+}
+
+.error-message {
+  color: red;
+  margin-top: 5px;
+  font-size: 12px;
+}

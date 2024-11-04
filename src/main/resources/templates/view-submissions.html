@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Submissions for Assignment</title>
+    <link rel="stylesheet" th:href="@{/css/view-submissions.css}">
+</head>
+<body>
+    <h1>Submissions for Assignment ID: <span th:text="${assignmentId}">123</span></h1>
+
+    <div th:if="${submissions != null && !submissions.isEmpty()}">
+        <h2>Submission List:</h2>
+        <ul>
+            <li th:each="submission : ${submissions}">
+                <div class="submission-card">
+                    <p><strong>Submission ID:</strong> <span th:text="${submission.id}">1</span></p>
+                    <p><strong>Student ID:</strong> <span th:text="${submission.studentId}">1</span></p>
+                    <p><strong>Submission Date:</strong> <span th:text="${#dates.format(submission.submissionDate, 'yyyy-MM-dd HH:mm')}">2024-01-01 12:00</span></p>
+                    <p><strong>Status:</strong> <span th:text="${submission.status}">Pending</span></p>
+                    <div class="assignment-submission">
+                      <p><strong>Attachment:</strong></p>
+                      <a th:href="@{'/file?path=' + ${submission.attachmentUrl}}" target="_blank">Download Attachment</a>                
+                    
+                    
+                      <form th:action="@{/submissions/grade}" method="post">
+                        <input type="hidden" name="submissionId" th:value="${submission.id}" />
+                        <label for="points">Points:</label>
+                        <input type="number" id="points" name="points" required />
+                        <label for="feedback">Feedback:</label>
+                        <textarea id="feedback" name="feedback" rows="3"></textarea>
+
+                        <button type="submit">Submit Grade</button>
+                    </form>
+
+                    </div>
+                  
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div th:if="${submissions == null || submissions.isEmpty()}">
+        <p>No submissions found for this assignment.</p>
+    </div>
+
+</body>
+</html>

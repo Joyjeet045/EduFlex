@@ -8,28 +8,31 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
-
 </head>
 <body>
     <div class="chat-app">
         <div class="channel-list" id="channelList">
-        <button class="toggle-btn" id="toggleBtn">
-            <i class="fas fa-chevron-right"></i> Channels
-        </button>
-        <ul id="channelItems">
-            <li th:each="channel : ${channels}" 
-                class="channel-item" 
-                th:data-id="${channel.id}" 
-                th:onclick="'selectChannel(this, ' + ${channel.id} + ')'">
-                #<span th:text="${channel.name}"></span>
-            </li>
-        </ul>
-    </div>
+            <button class="toggle-btn" id="toggleBtn">
+                <i class="fas fa-chevron-right"></i> Channels
+            </button>
+            <ul id="channelItems">
+                <li th:each="channel : ${channels}" 
+                    class="channel-item" 
+                    th:data-id="${channel.id}" 
+                    th:onclick="'selectChannel(this, ' + ${channel.id} + ')'">
+                    #<span th:text="${channel.name}"></span>
+                </li>
+            </ul>
+        </div>
         <div class="message-area">
             <h2 id="channelHeader">Please select a channel to view messages.</h2>
-            <div class="recommended-books" id="recommendedBooks" >
+            <div class="recommended-books" id="recommendedBooks">
                 <h3>Recommended Books</h3>
                 <ul id="bookList"></ul>
+            </div>
+            <div class="assignments">
+                <h3>Assignments</h3>
+                <ul id="assignmentList"></ul>
             </div>
             <ul id="messageList"></ul>
             <div class="message-input">
@@ -38,169 +41,272 @@
             </div>
         </div>
     </div>
-    
-<script>
-    let stompClient = null;
-    let currentChannelId = null;
-    let currentSubscription = null;  
-    const courseId = [[${courseId}]];
 
-    function connectWebSocket() {
-        const socket = new SockJS('/ws');
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function(frame) {
-            console.log('Connected: ' + frame);
-            if (currentChannelId) {
-                subscribeToChannel(currentChannelId);
-            }
-        }, function(error) {
-            console.error('STOMP error:', error);
-            setTimeout(connectWebSocket, 5000);
-        });
-    }
+    <script>
+        let stompClient = null;
+        let currentChannelId = null;
+        let currentSubscription = null;  
+        const courseId = [[${courseId}]];
 
-    function subscribeToChannel(channelId) {
-        if (currentSubscription) {
-            currentSubscription.unsubscribe();
+        function connectWebSocket() {
+            const socket = new SockJS('/ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function(frame) {
+                console.log('Connected: ' + frame);
+                if (currentChannelId) {
+                    subscribeToChannel(currentChannelId);
+                }
+            }, function(error) {
+                console.error('STOMP error:', error);
+                setTimeout(connectWebSocket, 5000);
+            });
         }
-        
-        currentSubscription = stompClient.subscribe('/topic/channel/' + channelId, function(message) {
-            displayMessage(JSON.parse(message.body));
-        });
-    }
 
-    function selectChannel(element, channelId) {
-        document.querySelectorAll('.channel-item').forEach(function(channel) {
-            channel.classList.remove('active');
-        });
-        element.classList.add('active');
-        currentChannelId = channelId;
-        
-        fetch('/api/messages/' + channelId)
+        function subscribeToChannel(channelId) {
+            if (currentSubscription) {
+                currentSubscription.unsubscribe();
+            }
+            currentSubscription = stompClient.subscribe('/topic/channel/' + channelId, function(message) {
+                displayMessage(JSON.parse(message.body));
+            });
+        }
+
+        function selectChannel(element, channelId) {
+            document.querySelectorAll('.channel-item').forEach(function(channel) {
+                channel.classList.remove('active');
+            });
+            element.classList.add('active');
+            currentChannelId = channelId;
+
+            fetch('/api/messages/' + channelId)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    let channelHeader = document.getElementById('channelHeader');
+                    channelHeader.innerHTML = 'Messages in #' + data.channel.name;
+
+                    let messageList = document.getElementById('messageList');
+                    messageList.innerHTML = '';
+
+                    data.messages.forEach(msg => {
+                        displayMessage(msg);
+                    });
+
+                    if (stompClient && stompClient.connected) {
+                        subscribeToChannel(channelId);
+                    }
+
+                    if (data.channel.name === "general" && courseId) {
+                        fetchRecommendedBooks(courseId);
+                        document.getElementById('recommendedBooks').style.display = 'block';
+                        fetchAssignments(courseId);  
+                        document.getElementById('sendMessageBtn').disabled = true;
+                    } else {
+                        document.getElementById('recommendedBooks').style.display = 'none';
+                        document.getElementById('sendMessageBtn').disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        }
+
+        function fetchRecommendedBooks(courseId) {
+            fetch('/api/courses/' + courseId + '/recommendedBooks')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(books => {
+                    let bookList = document.getElementById('bookList');
+                    bookList.innerHTML = ''; 
+
+                    books.forEach(book => {
+                        let bookItem = document.createElement('li');
+                        bookItem.innerHTML = `
+                            <img src="${book.thumbnail}" alt="${book.title}" class="book-thumbnail">
+                            <div class="book-info">
+                                <h4>${book.title}</h4>
+                                <p>by ${book.author}</p>
+                                <p><b>${book.notes}</b></p>
+                            </div>
+                        `;
+                        bookList.appendChild(bookItem);
+                    });
+                })
+                .catch(error => {
+                    console.error('There was a problem fetching recommended books:', error);
+                });
+        }
+        async function fetchSubmissionData(assignmentId, assignmentItem) {
+            try {
+                const response = await fetch(`/api/submissions?assignmentId=${assignmentId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch submission data');
+                }
+                const submission = await response.json();
+                const item=submission[0];
+                const statusClass = item.status === "SUBMITTED" && item.points === null
+                    ? "status-submitted" 
+                    : item.score !== null 
+                        ? "status-graded" 
+                        : "";
+                assignmentItem.querySelector('.assignment-status').innerHTML = `Status: ${item.status || "Not Submitted"}`;
+                assignmentItem.querySelector('.assignment-score').innerHTML = `Score: <strong>${item.points !== null ? item.points : 0}</strong>`;
+                assignmentItem.querySelector('.assignment-status').className = `assignment-status ${statusClass}`;
+
+                console.log('Fetched submission data for assignment', assignmentId, ':', submission);
+            } catch (error) {
+                console.error('Error fetching submission data:', error);
+            }
+        }
+
+
+        function fetchAssignments(courseId) {
+            fetch('/assignments/api/' + courseId)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(assignments => {
+                    let assignmentList = document.getElementById('assignmentList');
+                    assignmentList.innerHTML = '';
+
+                    assignments.forEach(assignment => {
+                        let assignmentItem = document.createElement('li');
+                        let statusClass = "";
+                        if (assignment.submissionStatus === "Submitted" && assignment.score === null) {
+                            statusClass = "status-submitted";
+                        } else if (assignment.score !== null) {
+                            statusClass = "status-graded";
+                        }
+                        
+                        assignmentItem.innerHTML = `
+                        <div class="assignment-card" onclick="fetchSubmissionData(${assignment.id}, this)">
+                                <h4 class="assignment-title">${assignment.title}</h4>
+                                <p class="assignment-description">${assignment.description}</p>
+                                <div class="assignment-details">
+                                    <span class="assignment-due-date">Due: ${new Date(assignment.dueDate).toLocaleDateString()}</span>
+                                    <span class="assignment-max-points">Max Points: <strong>${assignment.maxPoints}</strong></span>
+                                </div>
+                                <div class="assignment-submission-info">
+                                    <span class="assignment-status ${statusClass}">Status: ${assignment.submissionStatus || "Not Submitted"}</span>
+                                    <span class="assignment-score">Score: <strong>${assignment.points !== null ? assignment.points : 0}</strong></span>
+                                </div>
+                                <input type="file" id="fileInput-${assignment.id}" class="file-upload-input" />
+                                <label for="fileInput-${assignment.id}" class="file-upload-label">Choose File</label>
+                                <button class="submit-assignment" onclick="submitAssignment(${assignment.id})">Submit Assignment</button>
+                                <a href="/submissions/${assignment.id}" class="view-submissions-button button">View Submissions</a>                           
+                            </div>
+                        `
+
+                        assignmentList.appendChild(assignmentItem);
+                    });
+                })
+                .catch(error => {
+                    console.error('There was a problem fetching assignments:', error);
+                });
+        }
+
+        function submitAssignment(assignmentId) {
+            const fileInput = document.getElementById(`fileInput-${assignmentId}`);
+            const file = fileInput.files[0]; // Get the file from the input
+
+            if (!file) {
+                alert('Please select a file to submit.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('assignmentId', assignmentId);
+
+            fetch('/api/submissions/submit', {
+                method: 'POST',
+                body: formData,
+            })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                return response.json();
+                return response.text();
             })
             .then(data => {
-                let channelHeader = document.getElementById('channelHeader');
-                channelHeader.innerHTML = 'Messages in #' + data.channel.name;
-                
-                let messageList = document.getElementById('messageList');
-                messageList.innerHTML = '';
-                
-                data.messages.forEach(msg => {
-                    displayMessage(msg);
-                });
-
-                if (stompClient && stompClient.connected) {
-                    subscribeToChannel(channelId);
-                }
-                if (data.channel.name === "general" && courseId) {
-                    fetchRecommendedBooks(courseId);
-                    document.getElementById('recommendedBooks').style.display = 'block';
-                } else {
-
-                    document.getElementById('recommendedBooks').style.display = 'none';
-                }
-
+                alert(data); 
             })
             .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
+                console.error('There was a problem submitting the assignment:', error);
             });
-    }
-    function fetchRecommendedBooks(courseId) {
-    fetch('/api/courses/' + courseId + '/recommendedBooks')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+        }
+        function displayMessage(message) {
+            let messageList = document.getElementById('messageList');
+            let messageItem = document.createElement('li');
+            fetch(`/api/users/${message.userId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(user => {
+                    const messageContent = document.createElement('div');
+                    messageContent.innerHTML = `
+                        <small>${user.username}</small>
+                        <p>${message.content}</p>
+                    `;
+                    messageItem.appendChild(messageContent);
+                    messageList.appendChild(messageItem);
+                    messageList.scrollTop = messageList.scrollHeight;
+                })
+                .catch(error => {
+                    console.error('There was a problem fetching the username:', error);
+                });
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const messageContent = messageInput.value.trim();
+            if (messageContent && currentChannelId && stompClient && stompClient.connected) {
+                stompClient.send("/app/channel/"+currentChannelId+"/sendMessage", 
+                    {}, 
+                    JSON.stringify({ content: messageContent })
+                );
+                messageInput.value = '';
             }
-            return response.json();
-        })
-        .then(books => {
-            let bookList = document.getElementById('bookList');
-            bookList.innerHTML = ''; 
+        }
 
-            books.forEach(book => {
-                let bookItem = document.createElement('li');
-                bookItem.innerHTML = `
-                    <img src="${book.thumbnail}" alt="${book.title}" class="book-thumbnail">
-                    <div class="book-info">
-                        <h4>${book.title}</h4>
-                        <p>by ${book.author}</p>
-                        <p><b>${book.notes}</b></p>
-                    </div>
-                `;
-                bookList.appendChild(bookItem);
-            });
-        })
-        .catch(error => {
-            console.error('There was a problem fetching recommended books:', error);
+        // Add event listener for Enter key
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
         });
-    }
 
-  function displayMessage(message) {
-      let messageList = document.getElementById('messageList');
-      let messageItem = document.createElement('li');
-      fetch(`/api/users/${message.userId}`)
-          .then(response => {
-              if (!response.ok) {
-                  throw new Error('Network response was not ok');
-              }
-              return response.json();
-          })
-          .then(user => {
-              const messageContent = document.createElement('div');
-              messageContent.innerHTML = `
-                  <small>${user.username}</small>
-                  <p>${message.content}</p>
-              `;
-              messageItem.appendChild(messageContent);
-              messageList.appendChild(messageItem);
-              messageList.scrollTop = messageList.scrollHeight;
-          })
-          .catch(error => {
-              console.error('There was a problem fetching the username:', error);
-          });
-  }
+        // Connect WebSocket when page loads
+        connectWebSocket();
 
-  function sendMessage() {
-      const messageInput = document.getElementById('messageInput');
-      const messageContent = messageInput.value.trim();
-      if (messageContent && currentChannelId && stompClient && stompClient.connected) {
-          stompClient.send("/app/channel/"+currentChannelId+"/sendMessage", 
-              {}, 
-              JSON.stringify({ content: messageContent })
-          );
-          messageInput.value = '';
-      }
-  }
-
-  // Add event listener for Enter key
-  document.getElementById('messageInput').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
-          sendMessage();
-      }
-  });
-
-  // Connect WebSocket when page loads
-  connectWebSocket();
-  document.getElementById('toggleBtn').onclick = function() {
-      var channelList = document.getElementById('channelList');
-      var icon = this.querySelector('i');
-      if (channelList.style.width === '30px') {
-        channelList.style.width = '250px';
-        icon.classList.remove('fa-chevron-right');
-        icon.classList.add('fa-chevron-down');
-      } else {
-        channelList.style.width = '30px';
-        icon.classList.remove('fa-chevron-down');
-        icon.classList.add('fa-chevron-right');
-      }
-    };
-
-</script>
+        document.getElementById('toggleBtn').onclick = function() {
+            var channelList = document.getElementById('channelList');
+            var icon = this.querySelector('i');
+            if (channelList.style.width === '30px') {
+                channelList.style.width = '250px';
+                icon.classList.remove('fa-chevron-right');
+                icon.classList.add('fa-chevron-down');
+            } else {
+                channelList.style.width = '30px';
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-right');
+            }
+        };
+    </script>
 </body>
 </html>

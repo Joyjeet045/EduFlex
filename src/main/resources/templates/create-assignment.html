@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Assignment</title>
+    <link rel="stylesheet" type="text/css" href="/css/create-assignment.css">
+</head>
+<body>
+
+  <h1>Create Assignment for Course: <span th:text="${course.title}">Course Name</span></h1>
+
+  <form th:action="@{/assignments/create/{courseId}(courseId=${course.id})}" method="post">
+      <div>
+          <label for="title">Title:</label>
+          <input type="text" id="title" name="title" required>
+      </div>
+
+      <div>
+          <label for="description">Description:</label>
+          <textarea id="description" name="description" required></textarea>
+      </div>
+
+      <div>
+          <label for="due_date">Due Date:</label>
+          <input type="date" id="due_date" name="due_date" required>
+      </div>
+
+      <div>
+          <label for="max_points">Max Points:</label>
+          <input type="number" id="max_points" name="max_points" required min="0">
+      </div>
+
+      <div>
+          <button type="submit">Create Assignment</button>
+      </div>
+  </form>
+
+  <a th:href="@{/course/{courseId}(courseId=${course.id})}">Back to Course</a>
+
+</body>
+</html>
