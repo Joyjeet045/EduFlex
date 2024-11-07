@@ -36,8 +36,8 @@ public class AssignmentSubmissionDao {
     }
 
     public List<AssignmentSubmission> getSubmissionsByAssignId(Long assignmentId) {
-        String sql = "SELECT * FROM assignment_submissions WHERE assignment_id =?";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AssignmentSubmission.class), assignmentId);
+        String sql = "SELECT * FROM assignment_submissions WHERE assignment_id =? AND status =?";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(AssignmentSubmission.class), assignmentId,"SUBMITTED");
     }
 
     public AssignmentSubmission findSubmissionById(Long id) {

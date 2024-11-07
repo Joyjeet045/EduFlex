@@ -18,22 +18,21 @@
                     <p><strong>Submission Date:</strong> <span th:text="${#dates.format(submission.submissionDate, 'yyyy-MM-dd HH:mm')}">2024-01-01 12:00</span></p>
                     <p><strong>Status:</strong> <span th:text="${submission.status}">Pending</span></p>
                     <div class="assignment-submission">
-                      <p><strong>Attachment:</strong></p>
-                      <a th:href="@{'/file?path=' + ${submission.attachmentUrl}}" target="_blank">Download Attachment</a>                
-                    
-                    
-                      <form th:action="@{/submissions/grade}" method="post">
-                        <input type="hidden" name="submissionId" th:value="${submission.id}" />
-                        <label for="points">Points:</label>
-                        <input type="number" id="points" name="points" required />
-                        <label for="feedback">Feedback:</label>
-                        <textarea id="feedback" name="feedback" rows="3"></textarea>
+                        <p><strong>Attachment:</strong></p>
+                        <a th:href="@{'/file?path=' + ${submission.attachmentUrl}}" target="_blank">Download Attachment</a>                
 
-                        <button type="submit">Submit Grade</button>
-                    </form>
+                        <form th:action="@{/submissions/grade}" method="post" th:if="${submission.status != 'GRADED'}">
+                            <input type="hidden" name="submissionId" th:value="${submission.id}" />
 
+                            <label for="points">Points:</label>
+                            <input type="number" id="points" name="points" required />
+
+                            <label for="feedback">Feedback:</label>
+                            <textarea id="feedback" name="feedback" rows="3"></textarea>
+
+                            <button type="submit">Submit Grade</button>
+                        </form>
                     </div>
-                  
                 </div>
             </li>
         </ul>
@@ -42,6 +41,5 @@
     <div th:if="${submissions == null || submissions.isEmpty()}">
         <p>No submissions found for this assignment.</p>
     </div>
-
 </body>
 </html>

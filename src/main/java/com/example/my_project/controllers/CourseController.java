@@ -68,6 +68,7 @@ public class CourseController {
             Principal principal) {
         
         String username = principal.getName();
+        User user=userService.findUser(username);
         Map<Long, Integer> courseLectureCounts = new HashMap<>();
 
         List<Course> courses = courseService.findAll();
@@ -84,10 +85,11 @@ public class CourseController {
             int lectureCount = lectureService.getLecturesByCourseId(course.getId()).size();
             courseLectureCounts.put(course.getId(), lectureCount);
         }
-
+        boolean isTeacher=(user.getRole().equals(UserRole.TEACHER));
         model.addAttribute("username", username);
         model.addAttribute("courseLectureCounts", courseLectureCounts);
         model.addAttribute("courses", courses); 
+        model.addAttribute("isTeacher", isTeacher); 
         return "course-list";  
     }
 

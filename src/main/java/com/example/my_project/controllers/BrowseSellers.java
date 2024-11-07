@@ -21,7 +21,7 @@ public class BrowseSellers {
     
     @Autowired
     public BrowseSellers(UserBookService userBookService){
-      this.userBookService = userBookService;
+        this.userBookService = userBookService;
     }
 
     @GetMapping("/browse")

@@ -65,7 +65,7 @@
             </div>
         </div>
 
-        <div class="add-course-btn-container">
+        <div class="add-course-btn-container" th:if="${isTeacher}">
             <a th:href="@{/courses/add}" class="action-link add-course-btn">Add New Course</a>
         </div>
     </div>

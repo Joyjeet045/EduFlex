@@ -47,7 +47,9 @@
         let currentChannelId = null;
         let currentSubscription = null;  
         const courseId = [[${courseId}]];
-
+        const isStudent = [[${isStudent}]] ;
+        const isTeacher = [[${isTeacher}]];
+        
         function connectWebSocket() {
             const socket = new SockJS('/ws');
             stompClient = Stomp.over(socket);
@@ -191,22 +193,26 @@
                         
                         assignmentItem.innerHTML = `
                         <div class="assignment-card" onclick="fetchSubmissionData(${assignment.id}, this)">
-                                <h4 class="assignment-title">${assignment.title}</h4>
-                                <p class="assignment-description">${assignment.description}</p>
-                                <div class="assignment-details">
-                                    <span class="assignment-due-date">Due: ${new Date(assignment.dueDate).toLocaleDateString()}</span>
-                                    <span class="assignment-max-points">Max Points: <strong>${assignment.maxPoints}</strong></span>
-                                </div>
-                                <div class="assignment-submission-info">
-                                    <span class="assignment-status ${statusClass}">Status: ${assignment.submissionStatus || "Not Submitted"}</span>
-                                    <span class="assignment-score">Score: <strong>${assignment.points !== null ? assignment.points : 0}</strong></span>
-                                </div>
-                                <input type="file" id="fileInput-${assignment.id}" class="file-upload-input" />
-                                <label for="fileInput-${assignment.id}" class="file-upload-label">Choose File</label>
-                                <button class="submit-assignment" onclick="submitAssignment(${assignment.id})">Submit Assignment</button>
-                                <a href="/submissions/${assignment.id}" class="view-submissions-button button">View Submissions</a>                           
+                            <h4 class="assignment-title">${assignment.title}</h4>
+                            <p class="assignment-description">${assignment.description}</p>
+                            <div class="assignment-details">
+                                <span class="assignment-due-date">Due: ${new Date(assignment.dueDate).toLocaleDateString()}</span>
+                                <span class="assignment-max-points">Max Points: <strong>${assignment.maxPoints}</strong></span>
                             </div>
-                        `
+                            ${isStudent ? `
+                            <div class="assignment-submission-info">
+                                <span class="assignment-status ${statusClass}">Status: ${assignment.submissionStatus || "Not Submitted"}</span>
+                                <span class="assignment-score">Score: <strong>${assignment.points !== null ? assignment.points : 0}</strong></span>
+                            </div>
+                            
+                            <input type="file" id="fileInput-${assignment.id}" class="file-upload-input" />
+                            <label for="fileInput-${assignment.id}" class="file-upload-label">Choose File</label>
+                            <button class="submit-assignment" onclick="submitAssignment(${assignment.id})">Submit Assignment</button>
+                            ` : ''}
+                            ${isTeacher ? `<a href="/submissions/${assignment.id}" class="view-submissions-button button">View Submissions</a>` : ''}
+
+                                </div>
+                            `
 
                         assignmentList.appendChild(assignmentItem);
                     });
@@ -258,9 +264,10 @@
                 })
                 .then(user => {
                     const messageContent = document.createElement('div');
+                    messageContent.classList.add('message-content');
                     messageContent.innerHTML = `
-                        <small>${user.username}</small>
-                        <p>${message.content}</p>
+                        <small class="message-username">${user.username}</small>
+                        <p class="message-text">${message.content}</p>
                     `;
                     messageItem.appendChild(messageContent);
                     messageList.appendChild(messageItem);

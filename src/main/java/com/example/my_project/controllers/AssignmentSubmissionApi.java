@@ -25,8 +25,8 @@ public class AssignmentSubmissionApi{
 
     @Autowired
     public AssignmentSubmissionApi(AssignmentSubmissionService assignmentSubmissionService, 
-                                          UserService userService, 
-                                          FileUploadService fileUploadService) {
+                                        UserService userService, 
+                                        FileUploadService fileUploadService) {
         this.assignmentSubmissionService = assignmentSubmissionService;
         this.fileUploadService = fileUploadService;
         this.userService = userService;
@@ -34,8 +34,8 @@ public class AssignmentSubmissionApi{
 
     @PostMapping("/submit")
     public ResponseEntity<AssignmentSubmission> submitAssignment(@RequestParam("file") MultipartFile file,
-                                                                 @RequestParam("assignmentId") Long assignmentId, 
-                                                                 Principal principal) {
+                                                                @RequestParam("assignmentId") Long assignmentId, 
+                                                                Principal principal) {
         Long studentId = userService.findUser(principal.getName()).getId();
         String filePath = fileUploadService.saveFile(file);
         AssignmentSubmission submission = new AssignmentSubmission();
