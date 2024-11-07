@@ -83,3 +83,27 @@ button:hover {
 .error div {
   margin-top: 5px;
 }
+
+
+#books-container {
+  margin-top: 10px;
+}
+.book-entry {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.book-thumbnail {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  border-radius: 4px;
+}
+select {
+  width: 100%;
+  padding: 5px;
+}
+.book-info {
+  font-size: 0.9em;
+  color: #555;
+}

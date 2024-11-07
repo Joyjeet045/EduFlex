@@ -10,13 +10,13 @@
         
         <div class="thumbnail-container">
             <img th:if="${course.thumbnail != null}" 
-                th:src="@{${course.thumbnail}}" alt="Course Thumbnail" class="course-thumbnail"/>
+                 th:src="@{${course.thumbnail}}" alt="Course Thumbnail" class="course-thumbnail"/>
             <p th:if="${course.thumbnail == null}">No thumbnail available</p>
         </div>
         
         <div class="course-info">
-            <h3>Course Progress</h3>
-            <div class="progress-container">
+            <h3 th:if="${isStudent}">Course Progress</h3>
+            <div class="progress-container" th:if="${isStudent}">
                 <div class="progress-bar" th:style="'width:' + ${courseProgress} + '%'">
                     <span th:text="${courseProgress} + '%'">0%</span>
                 </div>
@@ -34,30 +34,12 @@
                 </p>           
             </div>
             
-            <div class="instructor-info">
-                <h2>Instructor</h2>
-                <div class="instructor-details" th:if="${course != null and course.instructor != null}">
-                    <img th:if="${course.instructor.profilePicture != null}" 
-                            th:src="@{/uploads/profilePictures/{profilePicture}(profilePicture=${course.instructor.profilePicture})}" 
-                            alt="Instructor Picture" 
-                            class="instructor-picture"/>
-                    <p th:if="${course.instructor.profilePicture == null}">No profile picture available</p>
-                    <div class="instructor-text">
-                        <h3>
-                            <a th:href="@{/user/profile/{id}(id=${course.instructor.id})}" 
-                            th:text="${course.instructor.fullName != null ? course.instructor.fullName : 'Unnamed Instructor'}">Instructor Name</a>
-                        </h3>
-                    </div>
-                </div>
-                <p th:if="${course == null or course.instructor == null}">Instructor information not available</p>
-            </div>
-            
             <h3>Lectures</h3>
             <ul>
                 <li th:if="${#lists.isEmpty(lectures)}">No lectures available.</li>
-                <li th:each="lecture : ${lectures}" th:if="${!#lists.isEmpty(lectures)}">
+                <li th:each="lecture : ${lectures}">
                     <form th:action="@{/course/{courseId}/lecture/{lectureId}/markAsDone(courseId=${course.id}, lectureId=${lecture.id})}" 
-                        method="post" 
+                        method="post" th:if="${isStudent}"
                         class="mark-as-done-form">
                         <button type="submit" class="mark-as-done-button">
                             <span th:if="${lectureCompletionStatus[lecture.id]}">Completed</span>
@@ -65,24 +47,23 @@
                         </button>
                     </form>
                     <a th:href="@{/course/{c_id}/lecture/{id}(c_id=${course.id}, id=${lecture.id})}" 
-                    th:text="${lecture.title}">
+                        th:text="${lecture.title}">
                         Lecture Title
                     </a>
                     <div style="margin-top: 0.5rem; color: #666; font-size: 0.9rem;">
                         <span>Time to Complete: </span>
                         <p>Duration: <span th:text="${lecture.formattedDuration}"></span></p>
-
                     </div>                
                 </li>
             </ul>
-            <div class="add-lecture-section">
+            <div th:if="${isInstructor}" class="add-lecture-section">
                 <h3>Add Lecture</h3>
                 <form th:action="@{/course/{courseId}/lecture/add(courseId=${course.id})}" method="get">
                     <button type="submit" class="add-lecture-button">Add Lecture</button>
                 </form>
             </div>
 
-            <div class="enroll-section" th:if="${#lists.size(enrolled) < course.maxParticipants}">
+            <div th:if="${isStudent && #lists.size(enrolled) < course.maxParticipants}" class="enroll-section">
                 <form th:action="@{/course/{courseId}/enroll(courseId=${course.id})}" method="post">
                     <button type="submit" class="enroll-button">Enroll Now</button>
                 </form>
@@ -92,14 +73,13 @@
                 Enrollment is full. You cannot join this course.
             </p>
 
-            <div class="create-assignment-section">
+            <div th:if="${isInstructor}" class="create-assignment-section">
                 <h3>Create Assignment</h3>
                 <form th:action="@{/assignments/create/{courseId}(courseId=${course.id})}" method="get">
                     <button type="submit" class="create-assignment-button">Create Assignment</button>
                 </form>
             </div>
         </div>
-    </div>
     </div>
 </body>
 </html>

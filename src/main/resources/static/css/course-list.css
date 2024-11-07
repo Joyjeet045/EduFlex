@@ -140,6 +140,17 @@ h1 {
   font-weight: bold;
   transition: background-color 0.3s;
 }
+.course-start-date {
+  font-size: 0.9em;
+  color: #777;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.course-start-date i {
+  margin-right: 5px;
+}
 
 .add-course-btn:hover {
   background-color: #218838; /* Darker green on hover */

@@ -51,6 +51,10 @@ public class DashboardController {
             model.addAttribute("pendingNotifications", pendingNotifications); 
             model.addAttribute("pendingRequests", pendingRequests);
             return "admin-dashboard"; 
+        }    
+        if ("TEACHER".equalsIgnoreCase(role)) {
+            List<Course> createdCourses = courseService.getAllCoursesByInstructor(userId);
+            model.addAttribute("createdCourses", createdCourses);
         }
         List<Enrollment> enrollments = enrollmentService.getEnrollmentsByUser(userId);
         List<Course> enrolledCourses = enrollments.stream()
@@ -64,8 +68,13 @@ public class DashboardController {
                 issue
             ))
             .collect(Collectors.toList());
+        boolean isStudent=(user.getRole().equals(UserRole.STUDENT));
+        boolean isTeacher=(user.getRole().equals(UserRole.TEACHER));
+
         model.addAttribute("issuedBooks", issuedBookDetails);
         model.addAttribute("enrolledCourses", enrolledCourses);
+        model.addAttribute("isStudent", isStudent);
+        model.addAttribute("isTeacher", isTeacher);
         return "dashboard";
     }
 }

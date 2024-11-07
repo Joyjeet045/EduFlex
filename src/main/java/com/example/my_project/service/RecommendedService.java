@@ -45,5 +45,16 @@ public class RecommendedService {
     }
     return List.of();
   }
+  public void addRecommendedBook(RecommendedBook recommendedBook) {
+        try {
+              if (recommendedBook == null || recommendedBook.getBookId() == null) {
+              throw new IllegalArgumentException("Invalid recommended book data.");
+              }
 
+            recommendedDao.addRecommendedBook(recommendedBook);
+        } catch (Exception e) {
+            System.out.println("Error adding recommended book: " + e.getMessage());
+            throw new RuntimeException("Failed to add recommended book", e);
+        }
+    }
 }

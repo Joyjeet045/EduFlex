@@ -6,45 +6,72 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="dashboard-heading">Your Enrolled Courses</h1>
-
-        <div class="course-container">
-            <div th:each="course : ${enrolledCourses}" class="course-card">
-
-                <div th:if="${course.thumbnail != null}">
-                    <img th:src="@{${course.thumbnail}}" alt="Course Thumbnail" class="course-thumbnail"/>
+        <!-- Enrolled Courses Section for Students -->
+        <div th:if="${isStudent}">
+            <h1 class="dashboard-heading">Your Enrolled Courses</h1>
+            <div class="course-container">
+                <div th:each="course : ${enrolledCourses}" class="course-card">
+                    <div th:if="${course.thumbnail != null}">
+                        <img th:src="@{${course.thumbnail}}" alt="Course Thumbnail" class="course-thumbnail"/>
+                    </div>
+                    <div class="course-info">
+                        <h2 class="course-title" th:text="${course.title}"></h2>
+                        <p class="course-description" th:text="${course.description}"></p>
+                        <a th:href="@{/course/{id}(id=${course.id})}" class="resume-button">Resume Course</a>
+                        <a th:href="@{/community/chat/{courseId}(courseId=${course.id})}" class="community-button">View Community</a>
+                    </div>
                 </div>
-                <div class="course-info">
-                    <h2 class="course-title" th:text="${course.title}"></h2>
-                    <p class="course-description" th:text="${course.description}"></p>
-                    <a th:href="@{/course/{id}(id=${course.id})}" class="resume-button">Resume Course</a>
-                    <a th:href="@{/community/chat/{courseId}(courseId=${course.id})}" class="community-button">View Community</a>
-                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(enrolledCourses)}" class="no-courses-message">
+                <p>You are not enrolled in any courses yet. Start exploring!</p>
             </div>
         </div>
 
-        <div th:if="${#lists.isEmpty(enrolledCourses)}" class="no-courses-message">
-            <p>You are not enrolled in any courses yet. Start exploring!</p>
-        </div>
-
-        <h1 class="dashboard-heading">Your Issued Books</h1>
-        <div class="book-container">
-            <div th:each="book : ${issuedBooks}" class="book-card">
-                <div th:if="${book.book.thumbnail != null}">
-                    <img th:src="${book.book.thumbnail}" alt="Book Thumbnail" class="book-thumbnail"/>
-                </div>
-                <div class="book-info">
-                    <h2 class="book-title" th:text="${book.book.title}"></h2>
-                    <p class="book-author" th:text="'Author: ' + ${book.book.author}"></p>
-                    <p class="issue-date" th:text="'Issued on: ' + ${#dates.format(book.issueDate, 'dd-MM-yyyy')}"></p>
-                    <form th:action="@{/books/return/{id}(id=${book.book.id})}" method="post">
-                        <button type="submit" class="return-book-button">Return Book</button>
-                    </form>        
+        <!-- Created Courses Section for Teachers -->
+        <div th:if="${isTeacher}">
+            <h1 class="dashboard-heading">Your Created Courses</h1>
+            <div class="course-container">
+                <div th:each="course : ${createdCourses}" class="course-card">
+                    <div th:if="${course.thumbnail != null}">
+                        <img th:src="@{${course.thumbnail}}" alt="Course Thumbnail" class="course-thumbnail"/>
+                    </div>
+                    <div class="course-info">
+                        <h2 class="course-title" th:text="${course.title}"></h2>
+                        <p class="course-description" th:text="${course.description}"></p>
+                        <a th:href="@{/course/{id}(id=${course.id})}" class="resume-button">Edit Course</a>
+                        <a th:href="@{/community/chat/{courseId}(courseId=${course.id})}" class="community-button">View Community</a>
+                    </div>
                 </div>
             </div>
+
+            <div th:if="${#lists.isEmpty(createdCourses)}" class="no-courses-message">
+                <p>You have not created any courses yet.</p>
+            </div>
         </div>
-        <div th:if="${#lists.isEmpty(issuedBooks)}" class="no-books-message">
-            <p>No books have been issued to you yet. Please check back later!</p>
+
+        <!-- Issued Books Section for Students -->
+        <div th:if="${isStudent}">
+            <h1 class="dashboard-heading">Your Issued Books</h1>
+            <div class="book-container">
+                <div th:each="book : ${issuedBooks}" class="book-card">
+                    <div th:if="${book.book.thumbnail != null}">
+                        <img th:src="${book.book.thumbnail}" alt="Book Thumbnail" class="book-thumbnail"/>
+                    </div>
+                    <div class="book-info">
+                        <h2 class="book-title" th:text="${book.book.title}"></h2>
+                        <p class="book-author" th:text="'Author: ' + ${book.book.author}"></p>
+                        <p class="issue-date" th:text="'Issued on: ' + ${#dates.format(book.issueDate, 'dd-MM-yyyy')}"></p>
+                        <form th:action="@{/books/return/{id}(id=${book.book.id})}" method="post">
+                            <button type="submit" class="return-book-button">Return Book</button>
+                        </form>        
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(issuedBooks)}" class="no-books-message">
+                <p>No books have been issued to you yet. Please check back later!</p>
+            </div>
         </div>
 
     </div>

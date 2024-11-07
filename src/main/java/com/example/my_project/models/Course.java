@@ -11,7 +11,7 @@ public class Course {
     private String title;
     private String description;
     private Language language;
-    private Long instructor;
+    private Long instructorId;
     private LocalDate startDate;
     private Category category;
     private BigDecimal price;

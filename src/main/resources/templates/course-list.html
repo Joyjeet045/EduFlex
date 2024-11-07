@@ -52,7 +52,10 @@
                 <div class="course-info">
                     <h2 class="course-title" th:text="${course.title}"></h2>
                     <p class="course-description" th:text="${course.description}"></p>
-                    <span class="chapters-info">
+                    <span class="course-start-date">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span th:text="${course.startDate != null ? #temporals.format(course.startDate, 'yyyy-MM-dd') : 'No Deadline'}"></span>
+                    </span>                    <span class="chapters-info">
                         <i class="fas fa-book"></i> 
                         <span th:text="${courseLectureCounts[course.id]}">0</span>&nbsp;chapters
                     </span>    

@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" href="/css/add-course.css"> 
+    <link rel="stylesheet" href="/css/add-course.css">
     <title>Add Course</title>
 </head>
 <body>
     <h1>Add Course</h1>
-    <form action="#" th:action="@{/courses/add}" th:object="${course}" method="post"> <!-- Removed enctype for file uploads -->
+    <form action="#" th:action="@{/courses/add}" th:object="${course}" method="post">
         <div>
             <label for="title">Title:</label>
             <input type="text" th:field="*{title}" required />
             <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red;"></div>
         </div>
-        
+
         <div>
             <label for="description">Description:</label>
             <textarea th:field="*{description}" required></textarea>
             <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" style="color: red;"></div>
         </div>
-        
+
         <div>
             <label for="language">Language:</label>
             <select th:field="*{language}" required>
@@ -27,7 +27,7 @@
             </select>
             <div th:if="${#fields.hasErrors('language')}" th:errors="*{language}" style="color: red;"></div>
         </div>
-        
+
         <div>
             <label for="category">Category:</label>
             <select th:field="*{category}" required>
@@ -36,7 +36,7 @@
             </select>
             <div th:if="${#fields.hasErrors('category')}" th:errors="*{category}" style="color: red;"></div>
         </div>
-        
+
         <div>
             <label for="price">Price:</label>
             <input type="number" th:field="*{price}" required />
@@ -51,11 +51,55 @@
 
         <div>
             <label for="thumbnail">Thumbnail URL:</label>
-            <input type="url" th:field="*{thumbnail}" placeholder="https://example.com/image.jpg" required /> 
+            <input type="url" th:field="*{thumbnail}" placeholder="https://example.com/image.jpg" required />
             <div th:if="${#fields.hasErrors('thumbnail')}" th:errors="*{thumbnail}" style="color: red;"></div>
+        </div>
+
+        <div id="recommended-books-section">
+            <label>Recommended Books:</label>
+            <div id="books-container">
+                <div class="book-entry">
+                    <select name="recommendedBooks[0].bookId" required>
+                        <option value="" disabled selected>Select a Book</option>
+                        <option th:each="book : ${books}" th:value="${book.id}" th:text="${book.title}"></option>
+                    </select>
+                    <input type="text" name="recommendedBooks[0].notes" placeholder="Notes (optional)" />
+                    <button type="button" onclick="addBookEntry()">+</button>
+                </div>
+            </div>
         </div>
 
         <button type="submit">Add Course</button>
     </form>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var books = /*[[${books}]]*/ [];
+        /*]]>*/
+    </script>
+
+    <script>
+        let bookIndex = 1;
+
+        function addBookEntry() {
+            const container = document.getElementById("books-container");
+            const newEntry = document.createElement("div");
+            newEntry.className = "book-entry";
+            newEntry.innerHTML = `
+                <select name="recommendedBooks[${bookIndex}].bookId" required>
+                    <option value="" disabled selected>Select a Book</option>
+                    ${books.map(book => `<option value="${book.id}">${book.title}</option>`).join('')}
+                </select>
+                <input type="text" name="recommendedBooks[${bookIndex}].notes" placeholder="Notes (optional)" />
+                <button type="button" onclick="removeBookEntry(this)">-</button>
+            `;
+            container.appendChild(newEntry);
+            bookIndex++;
+        }
+
+        function removeBookEntry(button) {
+            button.parentElement.remove();
+        }
+    </script>
 </body>
 </html>

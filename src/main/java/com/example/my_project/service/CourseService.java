@@ -36,11 +36,11 @@ public class CourseService {
         return courseDao.findAll();
     }
 
-    public boolean addCourse(Course course) {
+    public Course addCourse(Course course) {
         if (course != null) {
-            return courseDao.addCourse(course) > 0;  
+            return courseDao.addCourse(course);  
         } else {
-            return false;  
+            return null;  
         }
     }
     public boolean updateCourse(Course course) {

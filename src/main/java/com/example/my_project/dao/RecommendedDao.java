@@ -27,4 +27,18 @@ public class RecommendedDao {
             throw new RuntimeException("Error fetching recommended books by course ID", e);
         }
     }
+
+    public int addRecommendedBook(RecommendedBook recommendedBook) {
+        final String insertSql = "INSERT INTO recommended_books (course_id, book_id, notes) VALUES (?, ?, ?)";
+        try {
+            return jdbcTemplate.update(insertSql,
+                recommendedBook.getCourseId(),
+                recommendedBook.getBookId(),
+                recommendedBook.getNotes()
+            );
+        } catch (DataAccessException e) {
+            System.out.println("Error adding recommended book: " + e.getMessage());
+            throw new RuntimeException("Error adding recommended book to the database", e);
+        }
+    }
 }
